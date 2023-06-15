@@ -1,0 +1,6 @@
+{
+    "files.eol": "\n",
+    "javascript.preferences.importModuleSpecifier": "relative",
+    "typescript.preferences.importModuleSpecifier": "relative",
+    "editor.formatOnSave": true
+}
