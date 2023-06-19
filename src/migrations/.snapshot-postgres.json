@@ -359,6 +359,68 @@
           "nullable": false,
           "mappedType": "uuid"
         },
+        "property_id": {
+          "name": "property_id",
+          "type": "varchar(500)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 500,
+          "mappedType": "string"
+        },
+        "value": {
+          "name": "value",
+          "type": "varchar(500)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "length": 500,
+          "mappedType": "string"
+        }
+      },
+      "name": "item_property",
+      "schema": "off",
+      "indexes": [
+        {
+          "keyName": "item_property_pkey",
+          "columnNames": [
+            "item_version_id",
+            "property_id"
+          ],
+          "composite": true,
+          "primary": true,
+          "unique": true
+        }
+      ],
+      "checks": [],
+      "foreignKeys": {
+        "item_property_item_version_id_foreign": {
+          "constraintName": "item_property_item_version_id_foreign",
+          "columnNames": [
+            "item_version_id"
+          ],
+          "localTableName": "off.item_property",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "off.item_version",
+          "updateRule": "cascade"
+        }
+      }
+    },
+    {
+      "columns": {
+        "item_version_id": {
+          "name": "item_version_id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "uuid"
+        },
         "language_id": {
           "name": "language_id",
           "type": "varchar(255)",
@@ -489,6 +551,93 @@
             "id"
           ],
           "referencedTableName": "off.language",
+          "updateRule": "cascade"
+        }
+      }
+    },
+    {
+      "columns": {
+        "item_version_id": {
+          "name": "item_version_id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "uuid"
+        },
+        "parent_item_id": {
+          "name": "parent_item_id",
+          "type": "varchar(500)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 500,
+          "mappedType": "string"
+        },
+        "parent_taxonomy_id": {
+          "name": "parent_taxonomy_id",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "length": 500,
+          "mappedType": "string"
+        },
+        "parent_id": {
+          "name": "parent_id",
+          "type": "varchar(500)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "length": 500,
+          "mappedType": "string"
+        }
+      },
+      "name": "item_parent",
+      "schema": "off",
+      "indexes": [
+        {
+          "keyName": "item_parent_pkey",
+          "columnNames": [
+            "item_version_id",
+            "parent_item_id"
+          ],
+          "composite": true,
+          "primary": true,
+          "unique": true
+        }
+      ],
+      "checks": [],
+      "foreignKeys": {
+        "item_parent_item_version_id_foreign": {
+          "constraintName": "item_parent_item_version_id_foreign",
+          "columnNames": [
+            "item_version_id"
+          ],
+          "localTableName": "off.item_parent",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "off.item_version",
+          "updateRule": "cascade"
+        },
+        "item_parent_parent_taxonomy_id_parent_id_foreign": {
+          "constraintName": "item_parent_parent_taxonomy_id_parent_id_foreign",
+          "columnNames": [
+            "parent_taxonomy_id",
+            "parent_id"
+          ],
+          "localTableName": "off.item_parent",
+          "referencedColumnNames": [
+            "taxonomy_id",
+            "id"
+          ],
+          "referencedTableName": "off.item",
+          "deleteRule": "set null",
           "updateRule": "cascade"
         }
       }

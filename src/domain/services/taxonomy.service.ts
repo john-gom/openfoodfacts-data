@@ -11,6 +11,8 @@ import { ItemVersion } from "../entities/item-version";
 import { ItemName } from "../entities/item-name";
 import { ItemSynonym } from "../entities/item-synonym";
 import { ItemDescription } from "../entities/item-description";
+import { ItemProperty } from "../entities/item-property";
+import { ItemParent } from "../entities/item-parent";
 
 @Injectable()
 export class TaxonomyService {
@@ -18,6 +20,8 @@ export class TaxonomyService {
   existing = new Map<object, Map<string, BaseEntity>>();
 
   async importFromGit(id: string) {
+    await this.em.nativeDelete(ItemProperty, {});
+    await this.em.nativeDelete(ItemParent, {});
     await this.em.nativeDelete(ItemSynonym, {});
     await this.em.nativeDelete(ItemDescription, {});
     await this.em.nativeDelete(ItemName, {});
@@ -76,10 +80,17 @@ export class TaxonomyService {
           }
 
           // Canonical id line
+          // TODO: Normalise ids
+          // TODO: Define taxonomy group (for uniqueness)
           let words = this.remainder(parts, 1).split(',');
           const item = this.upsert(new Item(taxonomy, `${parts[0]}:${words[0].trim()}`));
           const itemVersion = this.upsert(new ItemVersion(item));
           item.currentVersion = itemVersion;
+
+          for (const parent of parents) {
+            this.upsert(new ItemParent(itemVersion, parent));
+          }
+
           do {
             if (parts.length === 2) {
               let language = this.upsert(new Language(parts[0]), false);
@@ -91,6 +102,9 @@ export class TaxonomyService {
             } else if (parts[0] === 'description') {
               let language = this.upsert(new Language(parts[1]), false);
               this.upsert(new ItemDescription(itemVersion, language, this.remainder(parts, 2).trim()));
+            } else {
+              // Must be a property
+              this.upsert(new ItemProperty(itemVersion, `${parts[0]}:${parts[1]}`, this.remainder(parts, 2).trim()));
             }
 
             // Skip comments
@@ -104,8 +118,13 @@ export class TaxonomyService {
         }
       } catch (e) {
         console.error(`${e.message}: at line ${i}, ${line} (${lines[i - 1]} / ${lines[i + 1]})`);
-
       }
+    }
+
+    // Assign parents
+    for (const parent of Object.values(this.existing[ItemParent.name])) {
+      const itemParent = parent as ItemParent;
+      itemParent.parent = this.existing[Item.name][`${itemParent.itemVersion.item.taxonomy.id}: ${itemParent.parentItemId}`];
     }
     await this.em.flush();
   }

@@ -22,6 +22,6 @@ export class ItemDescription extends BaseEntity {
   }
 
   businessKey(): string[] {
-    return [...this.itemVersion.item.businessKey(), ...this.language.businessKey()];
+    return [...this.itemVersion.businessKey(), ...this.language.businessKey()];
   }
 }
