@@ -1,13 +1,14 @@
 import { Entity, ManyToOne, PrimaryKey, Property } from '@mikro-orm/core';
 import { Ulid } from 'id128';
 import { Item } from './item';
+import { BaseEntity } from './base-entity';
 
 @Entity()
-export class ItemVersion {
+export class ItemVersion extends BaseEntity {
   @PrimaryKey({ type: 'uuid' })
   id = Ulid.generate().toRaw();
 
-  @ManyToOne()
+  @ManyToOne(() => Item)
   item!: Item;
 
   @Property({ type: 'timestamp' })
@@ -20,6 +21,11 @@ export class ItemVersion {
   validTo: Date
 
   constructor(item: Item) {
+    super();
     this.item = item;
+  }
+
+  businessKey(): string[] {
+    return this.item.businessKey();
   }
 }

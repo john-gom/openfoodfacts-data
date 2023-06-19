@@ -8,10 +8,10 @@ export class Item extends BaseEntity {
   @ManyToOne({ primary: true })
   taxonomy!: Taxonomy;
 
-  @PrimaryKey()
+  @PrimaryKey({ length: 500 })
   id!: string;
 
-  @OneToOne(() => ItemVersion)
+  @OneToOne(() => ItemVersion, { nullable: true })
   currentVersion: ItemVersion;
 
   constructor(taxonomy: Taxonomy, id: string) {

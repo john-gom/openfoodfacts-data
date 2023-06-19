@@ -73,11 +73,12 @@
         },
         "id": {
           "name": "id",
-          "type": "varchar(255)",
+          "type": "varchar(500)",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
+          "length": 500,
           "mappedType": "string"
         },
         "current_version_id": {
@@ -86,7 +87,7 @@
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
-          "nullable": false,
+          "nullable": true,
           "mappedType": "uuid"
         }
       },
@@ -137,6 +138,7 @@
             "id"
           ],
           "referencedTableName": "off.item_version",
+          "deleteRule": "set null",
           "updateRule": "cascade"
         }
       }
@@ -159,15 +161,17 @@
           "autoincrement": false,
           "primary": false,
           "nullable": false,
+          "length": 500,
           "mappedType": "string"
         },
         "item_id": {
           "name": "item_id",
-          "type": "varchar(255)",
+          "type": "varchar(500)",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
+          "length": 500,
           "mappedType": "string"
         },
         "created_on": {

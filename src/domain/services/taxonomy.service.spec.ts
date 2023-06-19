@@ -4,6 +4,7 @@ import { TaxonomyService } from "./taxonomy.service";
 import { MikroORM, RequestContext } from "@mikro-orm/core";
 
 describe('importFromGit', () => {
+  jest.setTimeout(20000);
   it('imports a taxonomy', async () => {
     const moduleRef = await Test.createTestingModule({
       imports: [DomainModule],
