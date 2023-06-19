@@ -1,6 +1,6 @@
 export default {
-  entities: ['./dist/entities'],
-  entitiesTs: ['./src/entities'],
+  entities: ['./dist/domain/entities'],
+  entitiesTs: ['./src/domain/entities'],
   dbName: 'postgres',
   user: 'postgres',
   password: 'cactus789',
