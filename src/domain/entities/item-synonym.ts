@@ -3,16 +3,16 @@ import { Language } from './language';
 import { BaseEntity } from './base-entity';
 import { ItemVersion } from './item-version';
 import { Ulid } from 'id128';
-import { Taxonomy } from './taxonomy';
+import { TaxonomyGroup } from './taxonomy-group';
 
 @Entity()
-@Unique({ properties: ['taxonomy', 'language', 'synonym'] })
+@Unique({ properties: ['taxonomyGroup', 'language', 'synonym'] })
 export class ItemSynonym extends BaseEntity {
   @PrimaryKey({ type: 'uuid' })
   id = Ulid.generate().toRaw();
 
   @ManyToOne()
-  taxonomy!: Taxonomy;
+  taxonomyGroup!: TaxonomyGroup;
 
   @ManyToOne()
   language!: Language;
@@ -26,12 +26,12 @@ export class ItemSynonym extends BaseEntity {
   constructor(itemVersion: ItemVersion, language: Language, synonym: string) {
     super();
     this.itemVersion = itemVersion;
-    this.taxonomy = itemVersion.item.taxonomy;
+    this.taxonomyGroup = itemVersion.item.taxonomy.group;
     this.language = language;
     this.synonym = synonym;
   }
 
   businessKey(): string[] {
-    return [...this.taxonomy.businessKey(), ...this.language.businessKey(), this.synonym];
+    return [...this.taxonomyGroup.businessKey(), ...this.language.businessKey(), this.synonym];
   }
 }

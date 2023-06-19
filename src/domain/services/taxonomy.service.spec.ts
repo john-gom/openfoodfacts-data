@@ -14,7 +14,7 @@ describe('importFromGit', () => {
     const orm = moduleRef.get(MikroORM);
     try {
       await RequestContext.createAsync(orm.em, async () => {
-        await taxonomyService.importFromGit('ingredients');
+        await taxonomyService.importFromGit();
       });
     } finally {
       orm.close();

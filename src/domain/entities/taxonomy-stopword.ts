@@ -1,17 +1,17 @@
 import { Entity, ManyToOne, PrimaryKey, Property, Unique } from '@mikro-orm/core';
-import { Taxonomy } from './taxonomy';
 import { Language } from './language';
 import { Ulid } from 'id128';
 import { BaseEntity } from './base-entity';
+import { TaxonomyGroup } from './taxonomy-group';
 
 @Entity()
-@Unique({ properties: ['taxonomy', 'language', 'stopWord'] })
+@Unique({ properties: ['taxonomyGroup', 'language', 'stopWord'] })
 export class TaxonomyStopword extends BaseEntity {
   @PrimaryKey({ type: 'uuid' })
   id = Ulid.generate().toRaw();
 
   @ManyToOne()
-  taxonomy!: Taxonomy;
+  taxonomyGroup!: TaxonomyGroup;
 
   @ManyToOne()
   language!: Language;
@@ -19,14 +19,14 @@ export class TaxonomyStopword extends BaseEntity {
   @Property()
   stopWord!: string;
 
-  constructor(taxonomy: Taxonomy, language: Language, stopWord: string) {
+  constructor(taxonomyGroup: TaxonomyGroup, language: Language, stopWord: string) {
     super();
-    this.taxonomy = taxonomy;
+    this.taxonomyGroup = taxonomyGroup;
     this.language = language;
     this.stopWord = stopWord;
   }
 
   businessKey(): string[] {
-    return [...this.taxonomy.businessKey(), ...this.language.businessKey(), this.stopWord];
+    return [...this.taxonomyGroup.businessKey(), ...this.language.businessKey(), this.stopWord];
   }
 }

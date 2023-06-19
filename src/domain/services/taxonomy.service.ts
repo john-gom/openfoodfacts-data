@@ -13,13 +13,14 @@ import { ItemSynonym } from "../entities/item-synonym";
 import { ItemDescription } from "../entities/item-description";
 import { ItemProperty } from "../entities/item-property";
 import { ItemParent } from "../entities/item-parent";
+import { TaxonomyGroup } from "../entities/taxonomy-group";
 
 @Injectable()
 export class TaxonomyService {
   constructor(private em: EntityManager) { }
   existing = new Map<object, Map<string, BaseEntity>>();
 
-  async importFromGit(id: string) {
+  async importFromGit() {
     await this.em.nativeDelete(ItemProperty, {});
     await this.em.nativeDelete(ItemParent, {});
     await this.em.nativeDelete(ItemSynonym, {});
@@ -33,6 +34,19 @@ export class TaxonomyService {
     await this.em.nativeDelete(Taxonomy, {});
     await this.em.nativeDelete(Language, {});
 
+    await this.importTaxonomy('additives', 'ingredients');
+    await this.importTaxonomy('ingredients', 'ingredients');
+
+    // Assign parents
+    for (const parent of Object.values(this.existing[ItemParent.name])) {
+      const itemParent = parent as ItemParent;
+      // Note we match on anything in teh same group
+      itemParent.parent = this.existing[Item.name][`${itemParent.itemVersion.item.taxonomy.group.id}: ${itemParent.parentItemId}`];
+    }
+    await this.em.flush();
+  }
+
+  async importTaxonomy(id: string, groupId: string) {
     const body = (await fetch(`https://raw.githubusercontent.com/openfoodfacts/openfoodfacts-server/main/taxonomies/${id}.txt`)).body;
     const reader = body.pipeThrough(new TextDecoderStream()).getReader();
 
@@ -43,7 +57,8 @@ export class TaxonomyService {
       if (done) break;
     }
     const lines = buffer.split('\n');
-    const taxonomy = this.upsert(new Taxonomy(id));
+    const group = this.upsert(new TaxonomyGroup(groupId));
+    const taxonomy = this.upsert(new Taxonomy(id, group));
     for (let i = 0; i < lines.length; i++) {
       let line = lines[i];
 
@@ -58,15 +73,15 @@ export class TaxonomyService {
           const language = this.upsert(new Language(parts[1]), false);
           const words = this.remainder(parts, 2).split(',');
 
-          const rootWord = this.upsert(new TaxonomySynonymRoot(taxonomy, language, words[0].trim()));
+          const rootWord = this.upsert(new TaxonomySynonymRoot(group, language, words[0].trim()));
           for (const synonym of words.slice(1)) {
-            this.upsert(new TaxonomySynonym(taxonomy, language, rootWord, synonym.trim()));
+            this.upsert(new TaxonomySynonym(group, language, rootWord, synonym.trim()));
           }
         } else if (parts[0] === 'stopwords') {
           const language = this.upsert(new Language(parts[1]), false);
           const words = this.remainder(parts, 2).split(',');
           for (const stopWord of words) {
-            this.upsert(new TaxonomyStopword(taxonomy, language, stopWord.trim()));
+            this.upsert(new TaxonomyStopword(group, language, stopWord.trim()));
           }
         } else {
           // A taxonomy entry
@@ -81,7 +96,6 @@ export class TaxonomyService {
 
           // Canonical id line
           // TODO: Normalise ids
-          // TODO: Define taxonomy group (for uniqueness)
           let words = this.remainder(parts, 1).split(',');
           const item = this.upsert(new Item(taxonomy, `${parts[0]}:${words[0].trim()}`));
           const itemVersion = this.upsert(new ItemVersion(item));
@@ -121,11 +135,6 @@ export class TaxonomyService {
       }
     }
 
-    // Assign parents
-    for (const parent of Object.values(this.existing[ItemParent.name])) {
-      const itemParent = parent as ItemParent;
-      itemParent.parent = this.existing[Item.name][`${itemParent.itemVersion.item.taxonomy.id}: ${itemParent.parentItemId}`];
-    }
     await this.em.flush();
   }
 
@@ -135,8 +144,8 @@ export class TaxonomyService {
     let cache = this.existing[taxonomy];
     const existingEntity = cache?.[dataString];
     if (existingEntity) {
-      if (logDuplicates)
-        console.log(`Ignoring Duplicate ${taxonomy}: ${dataString}`);
+      //if (logDuplicates)
+      //  console.log(`Ignoring Duplicate ${taxonomy}: ${dataString}`);
 
       return existingEntity;
     } else {

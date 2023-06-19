@@ -10,11 +10,13 @@ export class ItemProperty extends BaseEntity {
   @PrimaryKey({ length: 500 })
   propertyId!: string;
 
-  @Property({ length: 500, nullable: true })
+  @Property({ length: 8000, nullable: true })
   value: string;
 
   constructor(itemVersion: ItemVersion, propertyId: string, value: string) {
     super();
+    if (propertyId.length > 500)
+      console.error(`${propertyId} too long`);
     this.itemVersion = itemVersion;
     this.propertyId = propertyId;
     this.value = value;
