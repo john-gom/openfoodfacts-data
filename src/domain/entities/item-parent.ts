@@ -2,6 +2,7 @@ import { Entity, ManyToOne, PrimaryKey } from '@mikro-orm/core';
 import { BaseEntity } from './base-entity';
 import { ItemVersion } from './item-version';
 import { Item } from './item';
+import { Language } from './language';
 
 @Entity()
 export class ItemParent extends BaseEntity {
@@ -14,10 +15,10 @@ export class ItemParent extends BaseEntity {
   @ManyToOne({ nullable: true })
   parent: Item;
 
-  constructor(itemVersion: ItemVersion, parentItemId: string) {
+  constructor(itemVersion: ItemVersion, language: Language, parentItemId: string) {
     super();
     this.itemVersion = itemVersion;
-    this.parentItemId = parentItemId;
+    this.parentItemId = `${language.businessKey()}:${this.normalizeId(parentItemId)}`;
   }
 
   businessKey(): string[] {

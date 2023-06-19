@@ -3,6 +3,7 @@ import { Taxonomy } from './taxonomy';
 import { BaseEntity } from './base-entity';
 import { ItemVersion } from './item-version';
 import { TaxonomyGroup } from './taxonomy-group';
+import { Language } from './language';
 
 @Entity()
 export class Item extends BaseEntity {
@@ -18,11 +19,11 @@ export class Item extends BaseEntity {
   @OneToOne(() => ItemVersion, { nullable: true })
   currentVersion: ItemVersion;
 
-  constructor(taxonomy: Taxonomy, id: string) {
+  constructor(taxonomy: Taxonomy, language: Language, id: string) {
     super();
     this.taxonomy = taxonomy;
     this.taxonomyGroup = taxonomy.group;
-    this.id = id;
+    this.id = `${language.businessKey()}:${this.normalizeId(id)}`;
   }
 
   businessKey(): string[] {

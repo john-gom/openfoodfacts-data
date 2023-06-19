@@ -15,8 +15,6 @@ export class ItemProperty extends BaseEntity {
 
   constructor(itemVersion: ItemVersion, propertyId: string, value: string) {
     super();
-    if (propertyId.length > 500)
-      console.error(`${propertyId} too long`);
     this.itemVersion = itemVersion;
     this.propertyId = propertyId;
     this.value = value;
