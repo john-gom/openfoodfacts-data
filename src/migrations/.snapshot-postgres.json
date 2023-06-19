@@ -422,6 +422,79 @@
     },
     {
       "columns": {
+        "item_version_id": {
+          "name": "item_version_id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "uuid"
+        },
+        "language_id": {
+          "name": "language_id",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "string"
+        },
+        "description": {
+          "name": "description",
+          "type": "varchar(8000)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 8000,
+          "mappedType": "string"
+        }
+      },
+      "name": "item_description",
+      "schema": "off",
+      "indexes": [
+        {
+          "keyName": "item_description_pkey",
+          "columnNames": [
+            "item_version_id",
+            "language_id"
+          ],
+          "composite": true,
+          "primary": true,
+          "unique": true
+        }
+      ],
+      "checks": [],
+      "foreignKeys": {
+        "item_description_item_version_id_foreign": {
+          "constraintName": "item_description_item_version_id_foreign",
+          "columnNames": [
+            "item_version_id"
+          ],
+          "localTableName": "off.item_description",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "off.item_version",
+          "updateRule": "cascade"
+        },
+        "item_description_language_id_foreign": {
+          "constraintName": "item_description_language_id_foreign",
+          "columnNames": [
+            "language_id"
+          ],
+          "localTableName": "off.item_description",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "off.language",
+          "updateRule": "cascade"
+        }
+      }
+    },
+    {
+      "columns": {
         "id": {
           "name": "id",
           "type": "uuid",

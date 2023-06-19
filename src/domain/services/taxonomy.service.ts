@@ -10,6 +10,7 @@ import { Item } from "../entities/item";
 import { ItemVersion } from "../entities/item-version";
 import { ItemName } from "../entities/item-name";
 import { ItemSynonym } from "../entities/item-synonym";
+import { ItemDescription } from "../entities/item-description";
 
 @Injectable()
 export class TaxonomyService {
@@ -18,6 +19,7 @@ export class TaxonomyService {
 
   async importFromGit(id: string) {
     await this.em.nativeDelete(ItemSynonym, {});
+    await this.em.nativeDelete(ItemDescription, {});
     await this.em.nativeDelete(ItemName, {});
     await this.em.nativeDelete(ItemVersion, {});
     await this.em.nativeDelete(Item, {});
@@ -86,6 +88,9 @@ export class TaxonomyService {
               for (const synonym of words) {
                 this.upsert(new ItemSynonym(itemVersion, language, synonym.trim()));
               }
+            } else if (parts[0] === 'description') {
+              let language = this.upsert(new Language(parts[1]), false);
+              this.upsert(new ItemDescription(itemVersion, language, this.remainder(parts, 2).trim()));
             }
 
             // Skip comments
