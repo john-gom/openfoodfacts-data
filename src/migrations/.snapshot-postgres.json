@@ -62,6 +62,362 @@
     },
     {
       "columns": {
+        "taxonomy_id": {
+          "name": "taxonomy_id",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "string"
+        },
+        "id": {
+          "name": "id",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "string"
+        },
+        "current_version_id": {
+          "name": "current_version_id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "uuid"
+        }
+      },
+      "name": "item",
+      "schema": "off",
+      "indexes": [
+        {
+          "columnNames": [
+            "current_version_id"
+          ],
+          "composite": false,
+          "keyName": "item_current_version_id_unique",
+          "primary": false,
+          "unique": true
+        },
+        {
+          "keyName": "item_pkey",
+          "columnNames": [
+            "taxonomy_id",
+            "id"
+          ],
+          "composite": true,
+          "primary": true,
+          "unique": true
+        }
+      ],
+      "checks": [],
+      "foreignKeys": {
+        "item_taxonomy_id_foreign": {
+          "constraintName": "item_taxonomy_id_foreign",
+          "columnNames": [
+            "taxonomy_id"
+          ],
+          "localTableName": "off.item",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "off.taxonomy",
+          "updateRule": "cascade"
+        },
+        "item_current_version_id_foreign": {
+          "constraintName": "item_current_version_id_foreign",
+          "columnNames": [
+            "current_version_id"
+          ],
+          "localTableName": "off.item",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "off.item_version",
+          "updateRule": "cascade"
+        }
+      }
+    },
+    {
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "uuid"
+        },
+        "item_taxonomy_id": {
+          "name": "item_taxonomy_id",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "string"
+        },
+        "item_id": {
+          "name": "item_id",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "string"
+        },
+        "created_on": {
+          "name": "created_on",
+          "type": "timestamptz(0)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 6,
+          "mappedType": "datetime"
+        },
+        "valid_fron": {
+          "name": "valid_fron",
+          "type": "timestamptz(0)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "length": 6,
+          "mappedType": "datetime"
+        },
+        "valid_to": {
+          "name": "valid_to",
+          "type": "timestamptz(0)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "length": 6,
+          "mappedType": "datetime"
+        }
+      },
+      "name": "item_version",
+      "schema": "off",
+      "indexes": [
+        {
+          "keyName": "item_version_pkey",
+          "columnNames": [
+            "id"
+          ],
+          "composite": false,
+          "primary": true,
+          "unique": true
+        }
+      ],
+      "checks": [],
+      "foreignKeys": {
+        "item_version_item_taxonomy_id_item_id_foreign": {
+          "constraintName": "item_version_item_taxonomy_id_item_id_foreign",
+          "columnNames": [
+            "item_taxonomy_id",
+            "item_id"
+          ],
+          "localTableName": "off.item_version",
+          "referencedColumnNames": [
+            "taxonomy_id",
+            "id"
+          ],
+          "referencedTableName": "off.item",
+          "updateRule": "cascade"
+        }
+      }
+    },
+    {
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "uuid"
+        },
+        "taxonomy_id": {
+          "name": "taxonomy_id",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "string"
+        },
+        "language_id": {
+          "name": "language_id",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "string"
+        },
+        "item_version_id": {
+          "name": "item_version_id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "uuid"
+        },
+        "synonym": {
+          "name": "synonym",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "string"
+        }
+      },
+      "name": "item_synonym",
+      "schema": "off",
+      "indexes": [
+        {
+          "keyName": "item_synonym_taxonomy_id_language_id_synonym_unique",
+          "columnNames": [
+            "taxonomy_id",
+            "language_id",
+            "synonym"
+          ],
+          "composite": true,
+          "primary": false,
+          "unique": true
+        },
+        {
+          "keyName": "item_synonym_pkey",
+          "columnNames": [
+            "id"
+          ],
+          "composite": false,
+          "primary": true,
+          "unique": true
+        }
+      ],
+      "checks": [],
+      "foreignKeys": {
+        "item_synonym_taxonomy_id_foreign": {
+          "constraintName": "item_synonym_taxonomy_id_foreign",
+          "columnNames": [
+            "taxonomy_id"
+          ],
+          "localTableName": "off.item_synonym",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "off.taxonomy",
+          "updateRule": "cascade"
+        },
+        "item_synonym_language_id_foreign": {
+          "constraintName": "item_synonym_language_id_foreign",
+          "columnNames": [
+            "language_id"
+          ],
+          "localTableName": "off.item_synonym",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "off.language",
+          "updateRule": "cascade"
+        },
+        "item_synonym_item_version_id_foreign": {
+          "constraintName": "item_synonym_item_version_id_foreign",
+          "columnNames": [
+            "item_version_id"
+          ],
+          "localTableName": "off.item_synonym",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "off.item_version",
+          "updateRule": "cascade"
+        }
+      }
+    },
+    {
+      "columns": {
+        "item_version_id": {
+          "name": "item_version_id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "uuid"
+        },
+        "language_id": {
+          "name": "language_id",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "string"
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "string"
+        }
+      },
+      "name": "item_name",
+      "schema": "off",
+      "indexes": [
+        {
+          "keyName": "item_name_pkey",
+          "columnNames": [
+            "item_version_id",
+            "language_id"
+          ],
+          "composite": true,
+          "primary": true,
+          "unique": true
+        }
+      ],
+      "checks": [],
+      "foreignKeys": {
+        "item_name_item_version_id_foreign": {
+          "constraintName": "item_name_item_version_id_foreign",
+          "columnNames": [
+            "item_version_id"
+          ],
+          "localTableName": "off.item_name",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "off.item_version",
+          "updateRule": "cascade"
+        },
+        "item_name_language_id_foreign": {
+          "constraintName": "item_name_language_id_foreign",
+          "columnNames": [
+            "language_id"
+          ],
+          "localTableName": "off.item_name",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "off.language",
+          "updateRule": "cascade"
+        }
+      }
+    },
+    {
+      "columns": {
         "id": {
           "name": "id",
           "type": "uuid",
