@@ -23,7 +23,7 @@ export class TaxonomyStopword extends BaseEntity {
     super();
     this.taxonomyGroup = taxonomyGroup;
     this.language = language;
-    this.stopWord = this.normalizeName(stopWord);
+    this.stopWord = this.normalizeId(stopWord);
   }
 
   businessKey(): string[] {

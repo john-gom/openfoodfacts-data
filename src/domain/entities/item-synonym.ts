@@ -28,7 +28,7 @@ export class ItemSynonym extends BaseEntity {
     this.itemVersion = itemVersion;
     this.taxonomyGroup = itemVersion.item.taxonomy.group;
     this.language = language;
-    this.synonym = this.normalizeName(synonym);
+    this.synonym = this.normalizeId(synonym);
   }
 
   businessKey(): string[] {

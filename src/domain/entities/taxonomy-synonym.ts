@@ -28,7 +28,7 @@ export class TaxonomySynonym extends BaseEntity {
     this.taxonomyGroup = taxonomyGroup;
     this.language = language;
     this.rootWord = rootWord;
-    this.synonym = this.normalizeName(synonym);
+    this.synonym = this.normalizeId(synonym);
   }
 
   businessKey(): string[] {

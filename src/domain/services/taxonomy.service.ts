@@ -44,8 +44,10 @@ export class TaxonomyService {
     for (const parent of Object.values(this.existing[ItemParent.name])) {
       const itemParent = parent as ItemParent;
       // Note we match on anything in the same group
-      // TODO: Can match on synonyms
-      itemParent.parent = this.existing[Item.name][`${itemParent.itemVersion.item.taxonomy.group.id}: ${itemParent.parentItemId}`];
+      const parentParts = itemParent.parentItemId.split(':');
+      itemParent.parent = this.existing[ItemSynonym.name]
+      [`${itemParent.itemVersion.item.taxonomy.group.id}: ${parentParts[0].trim()}: ${parentParts[1].trim()}`]
+        ?.itemVersion?.item;
     }
     await this.em.flush();
   }
