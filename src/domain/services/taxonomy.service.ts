@@ -1,5 +1,5 @@
 import { EntityManager } from "@mikro-orm/core";
-import { Injectable } from "@nestjs/common";
+import { Injectable, Logger } from "@nestjs/common";
 import { Taxonomy } from "../entities/taxonomy";
 import { TaxonomySynonymRoot } from "../entities/taxonomy-synonym-root";
 import { Language } from "../entities/language";
@@ -17,6 +17,8 @@ import { TaxonomyGroup } from "../entities/taxonomy-group";
 
 @Injectable()
 export class TaxonomyService {
+  logger = new Logger(TaxonomyService.name);
+
   constructor(private em: EntityManager) { }
   existing = new Map<object, Map<string, BaseEntity>>();
 
@@ -64,12 +66,14 @@ export class TaxonomyService {
     }
     const lines = buffer.split('\n');
     let i = 0;
+    const self = this;
     function nextLine() {
       while (true) {
         if (i >= lines.length)
           return null;
 
-        let line = lines[i++].trim();
+        const originalLine = lines[i++];
+        let line = originalLine.trim();
         if (line.startsWith('#'))
           continue;
 
@@ -82,16 +86,23 @@ export class TaxonomyService {
         line = line.replace(/\\,/g, '\\‚');
         // removes parenthesis for roman numeral
         line = line.replace(/\(([ivx]+)\)/g, '$1');
-        return line.split(':');
+        return {
+          file: id,
+          parts: line.split(':'),
+          originalLine: originalLine,
+          lineNumber: i,
+          allLines: lines
+        };
       }
     }
-    const group = this.upsert(new TaxonomyGroup(groupId));
-    const taxonomy = this.upsert(new Taxonomy(id, group));
+    const group = this.upsert(new TaxonomyGroup(groupId), {}, true);
+    const taxonomy = this.upsert(new Taxonomy(id, group), {});
 
     main_loop:
     while (true) {
-      let parts = nextLine();
-      if (parts == null) break;
+      let line = nextLine();
+      if (line == null) break;
+      let parts = line.parts;
 
       try {
         if (parts.length < 2)
@@ -100,88 +111,92 @@ export class TaxonomyService {
         // TODO: Deal with commas in between numbers and escaped commas
         // TODO: Normalise quotes
         if (parts[0] === 'synonyms') {
-          const language = this.upsert(new Language(parts[1]), false);
+          const language = this.upsert(new Language(parts[1]), line, false);
           const words = this.remainder(parts, 2).split(',');
 
-          const rootWord = this.upsert(new TaxonomySynonymRoot(group, language, words[0].trim()));
+          const rootWord = this.upsert(new TaxonomySynonymRoot(group, language, words[0].trim()), line);
           for (const synonym of words.slice(1)) {
-            this.upsert(new TaxonomySynonym(group, language, rootWord, synonym.trim()));
+            this.upsert(new TaxonomySynonym(group, language, rootWord, synonym.trim()), line);
           }
         } else if (parts[0] === 'stopwords') {
-          const language = this.upsert(new Language(parts[1]), false);
+          const language = this.upsert(new Language(parts[1]), line, false);
           const words = this.remainder(parts, 2).split(',');
           for (const stopWord of words) {
-            this.upsert(new TaxonomyStopword(group, language, stopWord.trim()));
+            this.upsert(new TaxonomyStopword(group, language, stopWord.trim()), line);
           }
         } else {
           // A taxonomy entry. Read the block until the next blank line
-          const entryLineParts = [];
+          const entryLines = [];
           let item: Item = null;
           while (parts?.length > 1) {
             if (!item && parts.length === 2 && !parts[0].startsWith('<')) {
               let words = this.remainder(parts, 1).split(',');
-              let language = this.upsert(new Language(parts[0]), false);
-              item = this.upsert(new Item(taxonomy, language, words[0]));
-              const itemVersion = this.upsert(new ItemVersion(item));
+              let language = this.upsert(new Language(parts[0]), line, false);
+              item = this.upsert(new Item(taxonomy, language, words[0]), line);
+              const itemVersion = this.upsert(new ItemVersion(item), line);
               item.currentVersion = itemVersion;
-              this.upsert(new ItemName(item.currentVersion, language, words[0].trim()));
+              this.upsert(new ItemName(item.currentVersion, language, words[0].trim()), line);
               for (const synonym of words) {
-                this.upsert(new ItemSynonym(item.currentVersion, language, synonym.trim()));
+                this.upsert(new ItemSynonym(item.currentVersion, language, synonym.trim()), line);
               }
             } else {
-              entryLineParts.push(parts);
+              entryLines.push(line);
             }
-            parts = nextLine();
+            line = nextLine();
+            parts = line?.parts;
             // If we get a blank line but don't have an id yet then skip it as some entries have a description with a space after
-            if (parts?.length < 2 && !item)
-              parts = nextLine();
+            if (parts?.length < 2 && !item) {
+              line = nextLine();
+              parts = line.parts;
+            }
           }
           if (!item) {
-            console.log(`No canonical id for group starting with ${entryLineParts[0].join(':')} around line ${i} in ${id}`);
+            this.logger.error(`No canonical id for group starting '${entryLines[0].originalLine}' at ${entryLines[0].lineNumber} in ${entryLines[0].file}`);
             continue;
           }
 
-          for (const itemParts of entryLineParts) {
-            if (itemParts[0].startsWith('<')) {
-              const language = this.upsert(new Language(itemParts[0].substring(1)), false);
-              this.upsert(new ItemParent(item.currentVersion, language, this.remainder(itemParts, 1)));
-            } else if (itemParts.length === 2) {
-              const language = this.upsert(new Language(itemParts[0]), false);
-              const words = this.remainder(itemParts, 1).split(',');
-              this.upsert(new ItemName(item.currentVersion, language, words[0].trim()));
+          for (line of entryLines) {
+            parts = line.parts;
+            if (parts[0].startsWith('<')) {
+              const language = this.upsert(new Language(parts[0].substring(1)), line, false);
+              this.upsert(new ItemParent(item.currentVersion, language, this.remainder(parts, 1)), line);
+            } else if (parts.length === 2) {
+              const language = this.upsert(new Language(parts[0]), line, false);
+              const words = this.remainder(parts, 1).split(',');
+              this.upsert(new ItemName(item.currentVersion, language, words[0].trim()), line);
               for (const synonym of words) {
-                this.upsert(new ItemSynonym(item.currentVersion, language, synonym.trim()));
+                this.upsert(new ItemSynonym(item.currentVersion, language, synonym.trim()), line);
               }
             } else if (parts[0] === 'description') {
-              const language = this.upsert(new Language(itemParts[1]), false);
-              this.upsert(new ItemDescription(item.currentVersion, language, this.remainder(itemParts, 2).trim()));
+              const language = this.upsert(new Language(parts[1]), line, false);
+              this.upsert(new ItemDescription(item.currentVersion, language, this.remainder(parts, 2).trim()), line);
             } else {
               // Must be a property
-              this.upsert(new ItemProperty(item.currentVersion, `${itemParts[0]}:${itemParts[1]}`, this.remainder(itemParts, 2).trim()));
+              this.upsert(new ItemProperty(item.currentVersion, `${parts[0]}:${parts[1]}`, this.remainder(parts, 2).trim()), line);
             }
           }
         }
       } catch (e) {
-        console.error(`${e.message}: at line ${i}, ${lines[i]} (${lines[i - 1]} / ${lines[i + 1]})`);
+        console.error(`${e.message}: at line ${line?.lineNumber}: ${line?.originalLine}\n${e.stack}`);
       }
     }
 
     await this.em.flush();
   }
 
-  private upsert<T extends BaseEntity>(entity: T, logDuplicates = true): T {
-    const taxonomy = entity.constructor.name;
-    const dataString = entity.businessKey().join(': ');
-    let cache = this.existing[taxonomy];
+  private upsert<T extends BaseEntity>(entity: T, line: any, logDuplicates = true): T {
+    const entityType = entity.constructor.name;
+    const dataString = entity.businessKey().join(':');
+    let cache = this.existing[entityType];
     const existingEntity = cache?.[dataString];
     if (existingEntity) {
-      //if (logDuplicates)
-      //  console.log(`Ignoring Duplicate ${taxonomy}: ${dataString}`);
+      if (logDuplicates)
+        this.logger.warn(`Duplicate: ${entityType}: '${dataString}' at ${line.lineNumber} in ${line.file}: '${line.originalLine}'`);
 
       return existingEntity;
     } else {
       if (!cache) {
-        cache = this.existing[taxonomy] = new Map<string, BaseEntity>();
+        cache = this.existing[entityType] = new Map<string, BaseEntity>();
       }
       cache[dataString] = entity;
       this.em.persist(entity);
