@@ -10,7 +10,7 @@ async function bootstrap() {
   try {
     await RequestContext.createAsync(orm.em, async () => {
       //await app.get(TaxonomyService).importFromGit();
-      await app.get(ProductService).import();
+      await app.get(ProductService).importFromFile();
     });
   } finally {
     await orm.close();
