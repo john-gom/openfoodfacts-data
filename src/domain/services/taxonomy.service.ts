@@ -81,7 +81,7 @@ export class TaxonomyService {
       // Note we match on anything in the same group
       const parentParts = itemParent.parentItemId.split(':');
       itemParent.parent = this.existing[ItemSynonym.name]
-      [`${itemParent.itemVersion.item.taxonomy.group.id}: ${parentParts[0].trim()}: ${parentParts[1].trim()}`]
+      [`${itemParent.itemVersion.item.taxonomy.group.id}:${parentParts[0].trim()}:${parentParts[1].trim()}`]
         ?.itemVersion?.item;
     }
     await this.em.flush();
