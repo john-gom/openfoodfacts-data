@@ -50,7 +50,7 @@ export class ProductService {
       const product = await cursor.next();
       if (!product) break;
 
-      this.em.persist(new Product(product._id.toString(), product));
+      this.em.persist(new Product(Ulid.generate().toCanonical(), product));
       // Lowish batch size seems to work best, probably due to the size of the product document
       if (!(++i % 20)) {
         await this.em.flush();

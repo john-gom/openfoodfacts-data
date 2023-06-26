@@ -15,32 +15,65 @@ import { ItemProperty } from "../entities/item-property";
 import { ItemParent } from "../entities/item-parent";
 import { TaxonomyGroup } from "../entities/taxonomy-group";
 
+const taxonomyGroups = {
+  'traces': ['allergens'],
+  'amino_acids': ['amino_acids'],
+  'categories': ['categories'],
+  'data_quality': ['data_quality'],
+  'food_groups': ['food_groups'],
+  'improvements': ['improvements'],
+  'ingredients_analysis': ['ingredients_analysis'],
+  'ingredients_processing': ['ingredients_processing'],
+  'ingredients': ['ingredients', 'additives_classes', 'additives', 'minerals', 'vitamins', 'nucleotides', 'other_nutritional_substances'],
+  'labels': ['labels'],
+  'languages': ['languages'],
+  'misc': ['misc'],
+  'nova_groups': ['nova_groups'],
+  'nutrient_levels': ['nutrient_levels'],
+  'nutrients': ['nutrients'],
+  'origins': ['origins', 'countries'],
+  'packaging': ['packaging_materials', 'packaging_shapes', 'packaging_recycling', 'preservation'],
+  'periods_after_opening': ['periods_after_opening'],
+  'states': ['states'],
+}
+
 @Injectable()
 export class TaxonomyService {
-  logger = new Logger(TaxonomyService.name);
-
   constructor(private em: EntityManager) { }
   existing = new Map<object, Map<string, BaseEntity>>();
 
+  start = Date.now();
+  log(message: string) {
+    console.log(`${Date.now() - this.start}: ${message}`);
+  }
   async importFromGit() {
-    await this.em.nativeDelete(ItemProperty, {});
-    await this.em.nativeDelete(ItemParent, {});
-    await this.em.nativeDelete(ItemSynonym, {});
-    await this.em.nativeDelete(ItemDescription, {});
-    await this.em.nativeDelete(ItemName, {});
-    await this.em.nativeDelete(ItemVersion, {});
-    await this.em.nativeDelete(Item, {});
+    await this.em.transactional(async (em) => {
+      this.log("Deleting Items");
+      await em.nativeDelete(ItemProperty, {});
+      await em.nativeDelete(ItemParent, {});
+      await em.nativeDelete(ItemSynonym, {});
+      await em.nativeDelete(ItemDescription, {});
+      await em.nativeDelete(ItemName, {});
+      await em.nativeDelete(ItemVersion, {});
+      await em.nativeDelete(Item, {});
 
-    await this.em.nativeDelete(TaxonomyStopword, {});
-    await this.em.nativeDelete(TaxonomySynonym, {});
-    await this.em.nativeDelete(TaxonomySynonymRoot, {});
-    await this.em.nativeDelete(Taxonomy, {});
-    await this.em.nativeDelete(TaxonomyGroup, {});
+      this.log("Deleting Taxonomies");
+      await em.nativeDelete(TaxonomyStopword, {});
+      await em.nativeDelete(TaxonomySynonym, {});
+      await em.nativeDelete(TaxonomySynonymRoot, {});
+      await em.nativeDelete(Taxonomy, {});
+      await em.nativeDelete(TaxonomyGroup, {});
 
-    await this.em.nativeDelete(Language, {});
+      this.log("Deleting Languages");
+      await em.nativeDelete(Language, {});
+    });
+    this.log("Old data deleted");
 
-    await this.importTaxonomy('additives', 'ingredients');
-    await this.importTaxonomy('ingredients', 'ingredients');
+    for (const [taxonomyGroup, taxonomies] of Object.entries(taxonomyGroups)) {
+      for (const taxonomy of taxonomies) {
+        await this.importTaxonomy(taxonomy, taxonomyGroup);
+      }
+    }
 
     // Assign parents
     for (const parent of Object.values(this.existing[ItemParent.name])) {
@@ -55,6 +88,9 @@ export class TaxonomyService {
   }
 
   async importTaxonomy(id: string, groupId: string) {
+    const languagePrefix = /^[a-zA-Z][a-zA-Z][a-zA-Z]?([-_][a-zA-Z][a-zA-Z][a-zA-Z]?)?:/;
+
+    this.log(`Importing: ${id}`);
     const body = (await fetch(`https://raw.githubusercontent.com/openfoodfacts/openfoodfacts-server/main/taxonomies/${id}.txt`)).body;
     const reader = body.pipeThrough(new TextDecoderStream()).getReader();
 
@@ -95,7 +131,7 @@ export class TaxonomyService {
         };
       }
     }
-    const group = this.upsert(new TaxonomyGroup(groupId), {}, true);
+    const group = this.upsert(new TaxonomyGroup(groupId), {}, false);
     const taxonomy = this.upsert(new Taxonomy(id, group), {});
 
     main_loop:
@@ -129,7 +165,7 @@ export class TaxonomyService {
           const entryLines = [];
           let item: Item = null;
           while (parts?.length > 1) {
-            if (!item && parts.length === 2 && !parts[0].startsWith('<')) {
+            if (!item && languagePrefix.test(line.originalLine)) {
               let words = this.remainder(parts, 1).split(',');
               let language = this.upsert(new Language(parts[0]), line, false);
               item = this.upsert(new Item(taxonomy, language, words[0]), line);
@@ -151,7 +187,7 @@ export class TaxonomyService {
             }
           }
           if (!item) {
-            this.logger.error(`No canonical id for group starting '${entryLines[0].originalLine}' at ${entryLines[0].lineNumber} in ${entryLines[0].file}`);
+            this.log(`No canonical id for group starting '${entryLines[0].originalLine}' at ${entryLines[0].lineNumber} in ${entryLines[0].file}`);
             continue;
           }
 
@@ -160,7 +196,7 @@ export class TaxonomyService {
             if (parts[0].startsWith('<')) {
               const language = this.upsert(new Language(parts[0].substring(1)), line, false);
               this.upsert(new ItemParent(item.currentVersion, language, this.remainder(parts, 1)), line);
-            } else if (parts.length === 2) {
+            } else if (languagePrefix.test(line.originalLine) || parts.length === 2) {
               const language = this.upsert(new Language(parts[0]), line, false);
               const words = this.remainder(parts, 1).split(',');
               this.upsert(new ItemName(item.currentVersion, language, words[0].trim()), line);
@@ -191,7 +227,7 @@ export class TaxonomyService {
     const existingEntity = cache?.[dataString];
     if (existingEntity) {
       if (logDuplicates)
-        this.logger.warn(`Duplicate: ${entityType}: '${dataString}' at ${line.lineNumber} in ${line.file}: '${line.originalLine}'`);
+        this.log(`Duplicate: ${entityType}: '${dataString}' at ${line.lineNumber} in ${line.file}: '${line.originalLine}'`);
 
       return existingEntity;
     } else {
