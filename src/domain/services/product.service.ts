@@ -14,19 +14,23 @@ export class ProductService {
       input: fs.createReadStream('data/openfoodfacts-products.jsonl')
     });
 
-    const start = new Date().getTime();
     await this.em.nativeDelete(Product, {});
+    const start = new Date().getTime();
     let i = 0;
     for await (const line of rl) {
-      const product = JSON.parse(line);
-      this.em.persist(new Product(product._id.toString(), product));
-      // Lowish batch size seems to work best, probably due to the size of the product document
-      if (!(++i % 10)) {
-        await this.em.flush();
-        this.em.clear();
-        console.log((new Date().getTime() - start) + ': ' + i);
+      try {
+        i++;
+        const product = JSON.parse(line.replace(/\\u0000/g, ''));
+        this.em.persist(new Product(product._id.toString(), product));
+        // Lowish batch size seems to work best, probably due to the size of the product document
+        if (!(i % 10)) {
+          await this.em.flush();
+          this.em.clear();
+          console.log((new Date().getTime() - start) + ': ' + i);
+        }
+      } catch (e) {
+        console.log(e.message + ': ' + line);
       }
-      if (i > 2320) break;
     }
     await this.em.flush();
     console.log((new Date().getTime() - start) + ': ' + i);
