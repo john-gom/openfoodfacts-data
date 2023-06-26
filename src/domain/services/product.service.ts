@@ -4,6 +4,7 @@ import { MongoClient } from "mongodb";
 import { Product } from "../entities/product";
 import * as fs from 'fs';
 import * as readline from 'readline';
+import { Ulid } from "id128";
 
 @Injectable()
 export class ProductService {
@@ -21,7 +22,7 @@ export class ProductService {
       try {
         i++;
         const product = JSON.parse(line.replace(/\\u0000/g, ''));
-        this.em.persist(new Product(product._id.toString(), product));
+        this.em.persist(new Product(Ulid.generate().toCanonical(), product));
         // Lowish batch size seems to work best, probably due to the size of the product document
         if (!(i % 10)) {
           await this.em.flush();
