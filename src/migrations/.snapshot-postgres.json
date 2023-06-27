@@ -709,6 +709,16 @@
       "schema": "off",
       "indexes": [
         {
+          "keyName": "item_parent_parent_taxonomy_group_id_parent_id_index",
+          "columnNames": [
+            "parent_taxonomy_group_id",
+            "parent_id"
+          ],
+          "composite": true,
+          "primary": false,
+          "unique": false
+        },
+        {
           "keyName": "item_parent_pkey",
           "columnNames": [
             "item_version_id",
