@@ -21,6 +21,7 @@
     "import": "nest build && node dist/import"
   },
   "dependencies": {
+    "@graphile-contrib/pg-simplify-inflector": "^6.1.0",
     "@mikro-orm/core": "^5.7.12",
     "@mikro-orm/migrations": "^5.7.12",
     "@mikro-orm/nestjs": "^5.1.8",
