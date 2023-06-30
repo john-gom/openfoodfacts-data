@@ -171,7 +171,7 @@ export class TaxonomyService {
               item = this.upsert(new Item(taxonomy, language, words[0]), line);
               const itemVersion = this.upsert(new ItemVersion(item), line);
               item.currentVersion = itemVersion;
-              this.upsert(new ItemName(item.currentVersion, language, words[0].trim()), line);
+              this.upsert(new ItemName(item, language, words[0].trim()), line);
               for (const synonym of words) {
                 this.upsert(new ItemSynonym(item.currentVersion, language, synonym.trim()), line);
               }
@@ -199,13 +199,13 @@ export class TaxonomyService {
             } else if (languagePrefix.test(line.originalLine) || parts.length === 2) {
               const language = this.upsert(new Language(parts[0]), line, false);
               const words = this.remainder(parts, 1).split(',');
-              this.upsert(new ItemName(item.currentVersion, language, words[0].trim()), line);
+              this.upsert(new ItemName(item, language, words[0].trim()), line);
               for (const synonym of words) {
                 this.upsert(new ItemSynonym(item.currentVersion, language, synonym.trim()), line);
               }
             } else if (parts[0] === 'description') {
               const language = this.upsert(new Language(parts[1]), line, false);
-              this.upsert(new ItemDescription(item.currentVersion, language, this.remainder(parts, 2).trim()), line);
+              this.upsert(new ItemDescription(item, language, this.remainder(parts, 2).trim()), line);
             } else {
               // Must be a property
               this.upsert(new ItemProperty(item.currentVersion, `${parts[0]}:${parts[1]}`, this.remainder(parts, 2).trim()), line);

@@ -39,13 +39,16 @@ export class ProductService {
 
   async importFromMongo() {
     const start = new Date().getTime();
+    console.log((new Date().getTime() - start) + ': Deleting old products');
     await this.em.nativeDelete(Product, {});
+    console.log((new Date().getTime() - start) + ': Connecting to MongoDB');
     const client = new MongoClient('mongodb://127.0.0.1:27017');
     await client.connect();
     const db = client.db('off');
     const products = db.collection('products');
     const cursor = products.find();
     let i = 0;
+    console.log((new Date().getTime() - start) + ': Starting import');
     while (true) {
       const product = await cursor.next();
       if (!product) break;
