@@ -7,14 +7,19 @@ import * as readline from 'readline';
 import { Ulid } from "id128";
 import { ProductDataQualityTag } from "../entities/product-data-quality-tag";
 import { Item } from "../entities/item";
+import { off } from "process";
+import { ProductIngredient } from "../entities/product-ingredient";
 
 @Injectable()
 export class ProductService {
   dataQualityTags: Item[];
+  ingredientTags: Item[];
+
   constructor(private em: EntityManager) { }
 
   async cacheTags() {
     this.dataQualityTags = await this.em.find(Item, { taxonomy: { id: 'data_quality' } });
+    this.ingredientTags = await this.em.find(Item, { taxonomyGroup: { id: 'ingredients' } });
   }
 
   async importFromFile() {
@@ -30,7 +35,7 @@ export class ProductService {
       try {
         i++;
         const product = JSON.parse(line.replace(/\\u0000/g, ''));
-        this.em.persist(await this.createProduct(product));
+        this.em.persist(this.createProduct(product));
         // Lowish batch size seems to work best, probably due to the size of the product document
         if (!(i % 10)) {
           await this.em.flush();
@@ -61,7 +66,7 @@ export class ProductService {
       const product = await cursor.next();
       if (!product) break;
 
-      this.em.persist(await this.createProduct(product));
+      this.em.persist(this.createProduct(product));
       // Lowish batch size seems to work best, probably due to the size of the product document
       if (!(++i % 20)) {
         await this.em.flush();
@@ -78,10 +83,11 @@ export class ProductService {
   async deleteProducts() {
     console.log('Deleting old products');
     await this.em.nativeDelete(ProductDataQualityTag, {});
+    await this.em.nativeDelete(ProductIngredient, {});
     await this.em.nativeDelete(Product, {});
   }
 
-  async createProduct(offProduct: any): Promise<Product> {
+  createProduct(offProduct: any): Product {
     const product = this.em.create(Product, {
       id: Ulid.generate().toCanonical(),
       data: offProduct,
@@ -94,6 +100,30 @@ export class ProductService {
         item: this.dataQualityTags.find((item) => item.id === tag)
       }));
     }
+
+    this.createIngredients(product, 0, offProduct.ingredients);
+
     return product;
+  }
+
+  createIngredients(product: Product, sequence: number, ingredients: any[], parent?: ProductIngredient) {
+    for (const offIngredient of ingredients ?? []) {
+      const ingredient = this.em.create(ProductIngredient, {
+        product: product,
+        sequence: sequence++,
+        id: offIngredient.id,
+        text: offIngredient.text,
+        percentMin: offIngredient.percent_min,
+        percentMax: offIngredient.percent_max,
+        percentEstimate: offIngredient.percent_estimate,
+        parent: parent,
+        ingredient: this.ingredientTags.find((item) => item.id === offIngredient.id)
+      });
+      product.ingredients.add(ingredient);
+      if (offIngredient.ingredients) {
+        sequence = this.createIngredients(product, sequence, offIngredient.ingredients, ingredient);
+      }
+    }
+    return sequence;
   }
 }

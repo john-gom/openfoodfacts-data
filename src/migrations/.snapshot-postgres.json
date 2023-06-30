@@ -280,6 +280,170 @@
           "nullable": false,
           "mappedType": "string"
         },
+        "sequence": {
+          "name": "sequence",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "integer"
+        },
+        "parent_product_id": {
+          "name": "parent_product_id",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "string"
+        },
+        "parent_sequence": {
+          "name": "parent_sequence",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "integer"
+        },
+        "text": {
+          "name": "text",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "string"
+        },
+        "id": {
+          "name": "id",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "string"
+        },
+        "percent_min": {
+          "name": "percent_min",
+          "type": "double precision",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "double"
+        },
+        "percent_max": {
+          "name": "percent_max",
+          "type": "double precision",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "double"
+        },
+        "percent_estimate": {
+          "name": "percent_estimate",
+          "type": "double precision",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "double"
+        },
+        "ingredient_taxonomy_group_id": {
+          "name": "ingredient_taxonomy_group_id",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "length": 500,
+          "mappedType": "string"
+        },
+        "ingredient_id": {
+          "name": "ingredient_id",
+          "type": "varchar(500)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "length": 500,
+          "mappedType": "string"
+        }
+      },
+      "name": "product_ingredient",
+      "schema": "off",
+      "indexes": [
+        {
+          "keyName": "product_ingredient_pkey",
+          "columnNames": [
+            "product_id",
+            "sequence"
+          ],
+          "composite": true,
+          "primary": true,
+          "unique": true
+        }
+      ],
+      "checks": [],
+      "foreignKeys": {
+        "product_ingredient_product_id_foreign": {
+          "constraintName": "product_ingredient_product_id_foreign",
+          "columnNames": [
+            "product_id"
+          ],
+          "localTableName": "off.product_ingredient",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "off.product",
+          "updateRule": "cascade"
+        },
+        "product_ingredient_parent_product_id_parent_sequence_foreign": {
+          "constraintName": "product_ingredient_parent_product_id_parent_sequence_foreign",
+          "columnNames": [
+            "parent_product_id",
+            "parent_sequence"
+          ],
+          "localTableName": "off.product_ingredient",
+          "referencedColumnNames": [
+            "product_id",
+            "sequence"
+          ],
+          "referencedTableName": "off.product_ingredient",
+          "deleteRule": "set null",
+          "updateRule": "cascade"
+        },
+        "product_ingredient_ingredient_taxonomy_group_id_i_21439_foreign": {
+          "constraintName": "product_ingredient_ingredient_taxonomy_group_id_i_21439_foreign",
+          "columnNames": [
+            "ingredient_taxonomy_group_id",
+            "ingredient_id"
+          ],
+          "localTableName": "off.product_ingredient",
+          "referencedColumnNames": [
+            "taxonomy_group_id",
+            "id"
+          ],
+          "referencedTableName": "off.item",
+          "deleteRule": "set null",
+          "updateRule": "cascade"
+        }
+      }
+    },
+    {
+      "columns": {
+        "product_id": {
+          "name": "product_id",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "string"
+        },
         "tag": {
           "name": "tag",
           "type": "varchar(255)",
