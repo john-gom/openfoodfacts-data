@@ -1,4 +1,5 @@
-import { Entity, PrimaryKey, Property } from "@mikro-orm/core";
+import { Collection, Entity, OneToMany, PrimaryKey, Property } from "@mikro-orm/core";
+import { ProductDataQualityTag } from "./product-data-quality-tag";
 
 @Entity()
 export class Product {
@@ -8,8 +9,12 @@ export class Product {
   @Property({ type: 'jsonb' })
   data: any;
 
-  constructor(id: string, data: any) {
-    this.id = id;
-    this.data = data;
-  }
+  @Property()
+  name?: string;
+
+  @Property()
+  code?: string;
+
+  @OneToMany(() => ProductDataQualityTag, productDataQuality => productDataQuality.product)
+  dataQualityTags = new Collection<ProductDataQualityTag>(this);
 }

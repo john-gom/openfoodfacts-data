@@ -10,8 +10,8 @@ export class ItemProperty extends BaseEntity {
   @PrimaryKey({ length: 500 })
   propertyId!: string;
 
-  @Property({ length: 8000, nullable: true })
-  value: string;
+  @Property({ length: 8000 })
+  value?: string;
 
   constructor(itemVersion: ItemVersion, propertyId: string, value: string) {
     super();

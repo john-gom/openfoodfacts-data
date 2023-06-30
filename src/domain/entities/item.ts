@@ -16,8 +16,8 @@ export class Item extends BaseEntity {
   @ManyToOne()
   taxonomy!: Taxonomy;
 
-  @OneToOne(() => ItemVersion, { nullable: true })
-  currentVersion: ItemVersion;
+  @OneToOne()
+  currentVersion?: ItemVersion;
 
   constructor(taxonomy: Taxonomy, language: Language, id: string) {
     super();

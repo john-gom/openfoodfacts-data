@@ -8,17 +8,17 @@ export class ItemVersion extends BaseEntity {
   @PrimaryKey({ type: 'uuid' })
   id = Ulid.generate().toRaw();
 
-  @ManyToOne(() => Item)
+  @ManyToOne()
   item!: Item;
 
   @Property({ type: 'timestamp' })
   createdOn = new Date();
 
-  @Property({ type: 'timestamp', nullable: true })
-  validFron: Date;
+  @Property({ type: 'timestamp' })
+  validFron?: Date;
 
-  @Property({ type: 'timestamp', nullable: true })
-  validTo: Date
+  @Property({ type: 'timestamp' })
+  validTo?: Date
 
   constructor(item: Item) {
     super();

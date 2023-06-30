@@ -9,7 +9,7 @@ async function bootstrap() {
   const orm = app.get(MikroORM);
   try {
     await RequestContext.createAsync(orm.em, async () => {
-      await app.get(TaxonomyService).importFromGit();
+      //await app.get(TaxonomyService).importFromGit();
       //await app.get(ProductService).importFromFile();
       await app.get(ProductService).importFromMongo();
     });

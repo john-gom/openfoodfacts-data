@@ -12,8 +12,8 @@ export class ItemParent extends BaseEntity {
   @PrimaryKey({ length: 500 })
   parentItemId!: string;
 
-  @ManyToOne({ nullable: true, index: true })
-  parent: Item;
+  @ManyToOne({ index: true })
+  parent?: Item;
 
   constructor(itemVersion: ItemVersion, language: Language, parentItemId: string) {
     super();
