@@ -10,7 +10,7 @@ export class ProductIngredient {
   @PrimaryKey()
   sequence: number;
 
-  @ManyToOne()
+  @ManyToOne({ index: true })
   parent?: ProductIngredient;
 
   @Property()

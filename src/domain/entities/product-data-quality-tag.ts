@@ -1,4 +1,4 @@
-import { Entity, ManyToOne, PrimaryKey } from "@mikro-orm/core";
+import { Entity, ManyToOne, PrimaryKey, Property } from "@mikro-orm/core";
 import { Product } from "./product";
 import { Item } from "./item";
 
@@ -8,6 +8,9 @@ export class ProductDataQualityTag {
   product: Product;
 
   @PrimaryKey()
+  sequence: number;
+
+  @Property()
   tag: string;
 
   @ManyToOne()

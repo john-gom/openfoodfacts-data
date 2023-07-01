@@ -10,7 +10,7 @@ export class Item extends BaseEntity {
   @ManyToOne({ primary: true })
   taxonomyGroup!: TaxonomyGroup;
 
-  @PrimaryKey({ length: 500 })
+  @PrimaryKey()
   id!: string;
 
   @ManyToOne()

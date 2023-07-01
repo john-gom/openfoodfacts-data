@@ -7,10 +7,10 @@ export class ItemProperty extends BaseEntity {
   @ManyToOne({ primary: true })
   itemVersion!: ItemVersion;
 
-  @PrimaryKey({ length: 500 })
+  @PrimaryKey()
   propertyId!: string;
 
-  @Property({ length: 8000 })
+  @Property()
   value?: string;
 
   constructor(itemVersion: ItemVersion, propertyId: string, value: string) {

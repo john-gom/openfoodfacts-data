@@ -9,7 +9,7 @@ export class ItemParent extends BaseEntity {
   @ManyToOne({ primary: true })
   itemVersion!: ItemVersion;
 
-  @PrimaryKey({ length: 500 })
+  @PrimaryKey()
   parentItemId!: string;
 
   @ManyToOne({ index: true })

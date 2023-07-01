@@ -1,13 +1,11 @@
-import { EntityManager } from "@mikro-orm/core";
+import { EntityManager, QueryOrder } from "@mikro-orm/core";
 import { Injectable } from "@nestjs/common";
 import { MongoClient } from "mongodb";
 import { Product } from "../entities/product";
 import * as fs from 'fs';
 import * as readline from 'readline';
-import { Ulid } from "id128";
 import { ProductDataQualityTag } from "../entities/product-data-quality-tag";
 import { Item } from "../entities/item";
-import { off } from "process";
 import { ProductIngredient } from "../entities/product-ingredient";
 
 @Injectable()
@@ -15,6 +13,8 @@ export class ProductService {
   dataQualityTags: Item[];
   ingredientTags: Item[];
 
+  // Lowish batch size seems to work best, probably due to the size of the product document
+  importBatchSize = 20;
   constructor(private em: EntityManager) { }
 
   async cacheTags() {
@@ -22,22 +22,22 @@ export class ProductService {
     this.ingredientTags = await this.em.find(Item, { taxonomyGroup: { id: 'ingredients' } });
   }
 
-  async importFromFile() {
+  async importFromFile(update = false) {
     const rl = readline.createInterface({
       input: fs.createReadStream('data/openfoodfacts-products.jsonl')
     });
 
-    await this.deleteProducts();
+    await this.deleteProducts(update);
     await this.cacheTags();
     const start = new Date().getTime();
     let i = 0;
     for await (const line of rl) {
       try {
         i++;
-        const product = JSON.parse(line.replace(/\\u0000/g, ''));
-        this.em.persist(this.createProduct(product));
-        // Lowish batch size seems to work best, probably due to the size of the product document
-        if (!(i % 10)) {
+        const data = JSON.parse(line.replace(/\\u0000/g, ''));
+
+        this.em.persist(this.fixupProduct(await this.findOrNewProduct(update, data), data));
+        if (!(i % this.importBatchSize)) {
           await this.em.flush();
           this.em.clear();
           console.log((new Date().getTime() - start) + ': ' + i);
@@ -50,9 +50,19 @@ export class ProductService {
     console.log((new Date().getTime() - start) + ': ' + i);
   }
 
-  async importFromMongo() {
+  private async findOrNewProduct(update: boolean, data: any) {
+    let product: Product;
+    if (update) {
+      const code = data.code;
+      if (code) product = await this.em.findOne(Product, { code: code });
+    }
+    if (!product) product = new Product();
+    return product;
+  }
+
+  async importFromMongo(update = false) {
     const start = new Date().getTime();
-    await this.deleteProducts();
+    await this.deleteProducts(update);
     await this.cacheTags();
     console.log((new Date().getTime() - start) + ': Connecting to MongoDB');
     const client = new MongoClient('mongodb://127.0.0.1:27017');
@@ -63,12 +73,11 @@ export class ProductService {
     let i = 0;
     console.log((new Date().getTime() - start) + ': Starting import');
     while (true) {
-      const product = await cursor.next();
-      if (!product) break;
+      const data = await cursor.next();
+      if (!data) break;
 
-      this.em.persist(this.createProduct(product));
-      // Lowish batch size seems to work best, probably due to the size of the product document
-      if (!(++i % 20)) {
+      this.em.persist(this.fixupProduct(await this.findOrNewProduct(update, data), data));
+      if (!(++i % this.importBatchSize)) {
         await this.em.flush();
         this.em.clear();
         console.log((new Date().getTime() - start) + ': ' + i);
@@ -80,28 +89,38 @@ export class ProductService {
     await client.close();
   }
 
-  async deleteProducts() {
-    console.log('Deleting old products');
-    await this.em.nativeDelete(ProductDataQualityTag, {});
-    await this.em.nativeDelete(ProductIngredient, {});
-    await this.em.nativeDelete(Product, {});
+  async deleteProducts(update) {
+    await this.deleteProductChildren();
+    if (!update) {
+      console.log('Deleting old products');
+      await this.em.nativeDelete(Product, {});
+    }
   }
 
-  createProduct(offProduct: any): Product {
-    const product = this.em.create(Product, {
-      id: Ulid.generate().toCanonical(),
-      data: offProduct,
-      name: offProduct.product_name,
-      code: offProduct.code
-    });
-    for (const tag of offProduct.data_quality_tags ?? []) {
-      product.dataQualityTags.add(this.em.create(ProductDataQualityTag, {
+  async deleteProductChildren() {
+    console.log('Deleting product child data');
+    await this.em.nativeDelete(ProductDataQualityTag, {});
+    await this.em.nativeDelete(ProductIngredient, {});
+  }
+
+  fixupProduct(product: Product, data: any): Product {
+    //product.data = data;
+    product.name = data.product_name;
+    product.code = data.code;
+
+    //product.dataQualityTags.removeAll();
+    let i = 0;
+    for (const tag of data.data_quality_tags ?? []) {
+      this.em.persist(this.em.create(ProductDataQualityTag, {
+        product: product,
+        sequence: i++,
         tag: tag,
         item: this.dataQualityTags.find((item) => item.id === tag)
       }));
     }
 
-    this.createIngredients(product, 0, offProduct.ingredients);
+    //product.ingredients.removeAll();
+    this.createIngredients(product, 0, data.ingredients);
 
     return product;
   }
@@ -119,7 +138,7 @@ export class ProductService {
         parent: parent,
         ingredient: this.ingredientTags.find((item) => item.id === offIngredient.id)
       });
-      product.ingredients.add(ingredient);
+      this.em.persist(ingredient);
       if (offIngredient.ingredients) {
         sequence = this.createIngredients(product, sequence, offIngredient.ingredients, ingredient);
       }

@@ -8,12 +8,12 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "varchar(255)",
+          "type": "text",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "mappedType": "string"
+          "mappedType": "text"
         }
       },
       "name": "language",
@@ -36,12 +36,12 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "varchar(255)",
+          "type": "uuid",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "mappedType": "string"
+          "mappedType": "uuid"
         },
         "data": {
           "name": "data",
@@ -49,31 +49,40 @@
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
-          "nullable": false,
+          "nullable": true,
           "mappedType": "json"
         },
         "name": {
           "name": "name",
-          "type": "varchar(255)",
+          "type": "text",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": true,
-          "mappedType": "string"
+          "mappedType": "text"
         },
         "code": {
           "name": "code",
-          "type": "varchar(255)",
+          "type": "text",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": true,
-          "mappedType": "string"
+          "mappedType": "text"
         }
       },
       "name": "product",
       "schema": "off",
       "indexes": [
+        {
+          "columnNames": [
+            "code"
+          ],
+          "composite": false,
+          "keyName": "product_code_index",
+          "primary": false,
+          "unique": false
+        },
         {
           "keyName": "product_pkey",
           "columnNames": [
@@ -91,12 +100,12 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "varchar(255)",
+          "type": "text",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "mappedType": "string"
+          "mappedType": "text"
         }
       },
       "name": "taxonomy_group",
@@ -119,21 +128,21 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "varchar(255)",
+          "type": "text",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "mappedType": "string"
+          "mappedType": "text"
         },
         "group_id": {
           "name": "group_id",
-          "type": "varchar(255)",
+          "type": "text",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "mappedType": "string"
+          "mappedType": "text"
         }
       },
       "name": "taxonomy",
@@ -169,31 +178,30 @@
       "columns": {
         "taxonomy_group_id": {
           "name": "taxonomy_group_id",
-          "type": "varchar(255)",
+          "type": "text",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "mappedType": "string"
+          "mappedType": "text"
         },
         "id": {
           "name": "id",
-          "type": "varchar(500)",
+          "type": "text",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "length": 500,
-          "mappedType": "string"
+          "mappedType": "text"
         },
         "taxonomy_id": {
           "name": "taxonomy_id",
-          "type": "varchar(255)",
+          "type": "text",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "mappedType": "string"
+          "mappedType": "text"
         },
         "current_version_id": {
           "name": "current_version_id",
@@ -273,12 +281,12 @@
       "columns": {
         "product_id": {
           "name": "product_id",
-          "type": "varchar(255)",
+          "type": "uuid",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "mappedType": "string"
+          "mappedType": "uuid"
         },
         "sequence": {
           "name": "sequence",
@@ -291,12 +299,12 @@
         },
         "parent_product_id": {
           "name": "parent_product_id",
-          "type": "varchar(255)",
+          "type": "uuid",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": true,
-          "mappedType": "string"
+          "mappedType": "uuid"
         },
         "parent_sequence": {
           "name": "parent_sequence",
@@ -309,21 +317,21 @@
         },
         "text": {
           "name": "text",
-          "type": "varchar(255)",
+          "type": "text",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": true,
-          "mappedType": "string"
+          "mappedType": "text"
         },
         "id": {
           "name": "id",
-          "type": "varchar(255)",
+          "type": "text",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": true,
-          "mappedType": "string"
+          "mappedType": "text"
         },
         "percent_min": {
           "name": "percent_min",
@@ -354,28 +362,36 @@
         },
         "ingredient_taxonomy_group_id": {
           "name": "ingredient_taxonomy_group_id",
-          "type": "varchar(255)",
+          "type": "text",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": true,
-          "length": 500,
-          "mappedType": "string"
+          "mappedType": "text"
         },
         "ingredient_id": {
           "name": "ingredient_id",
-          "type": "varchar(500)",
+          "type": "text",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": true,
-          "length": 500,
-          "mappedType": "string"
+          "mappedType": "text"
         }
       },
       "name": "product_ingredient",
       "schema": "off",
       "indexes": [
+        {
+          "keyName": "product_ingredient_parent_product_id_parent_sequence_index",
+          "columnNames": [
+            "parent_product_id",
+            "parent_sequence"
+          ],
+          "composite": true,
+          "primary": false,
+          "unique": false
+        },
         {
           "keyName": "product_ingredient_pkey",
           "columnNames": [
@@ -437,41 +453,48 @@
       "columns": {
         "product_id": {
           "name": "product_id",
-          "type": "varchar(255)",
+          "type": "uuid",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "mappedType": "string"
+          "mappedType": "uuid"
+        },
+        "sequence": {
+          "name": "sequence",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "integer"
         },
         "tag": {
           "name": "tag",
-          "type": "varchar(255)",
+          "type": "text",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "mappedType": "string"
+          "mappedType": "text"
         },
         "item_taxonomy_group_id": {
           "name": "item_taxonomy_group_id",
-          "type": "varchar(255)",
+          "type": "text",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": true,
-          "length": 500,
-          "mappedType": "string"
+          "mappedType": "text"
         },
         "item_id": {
           "name": "item_id",
-          "type": "varchar(500)",
+          "type": "text",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": true,
-          "length": 500,
-          "mappedType": "string"
+          "mappedType": "text"
         }
       },
       "name": "product_data_quality_tag",
@@ -481,7 +504,7 @@
           "keyName": "product_data_quality_tag_pkey",
           "columnNames": [
             "product_id",
-            "tag"
+            "sequence"
           ],
           "composite": true,
           "primary": true,
@@ -532,23 +555,21 @@
         },
         "item_taxonomy_group_id": {
           "name": "item_taxonomy_group_id",
-          "type": "varchar(255)",
+          "type": "text",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "length": 500,
-          "mappedType": "string"
+          "mappedType": "text"
         },
         "item_id": {
           "name": "item_id",
-          "type": "varchar(500)",
+          "type": "text",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "length": 500,
-          "mappedType": "string"
+          "mappedType": "text"
         },
         "created_on": {
           "name": "created_on",
@@ -625,21 +646,21 @@
         },
         "taxonomy_group_id": {
           "name": "taxonomy_group_id",
-          "type": "varchar(255)",
+          "type": "text",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "mappedType": "string"
+          "mappedType": "text"
         },
         "language_id": {
           "name": "language_id",
-          "type": "varchar(255)",
+          "type": "text",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "mappedType": "string"
+          "mappedType": "text"
         },
         "item_version_id": {
           "name": "item_version_id",
@@ -652,12 +673,12 @@
         },
         "synonym": {
           "name": "synonym",
-          "type": "varchar(255)",
+          "type": "text",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "mappedType": "string"
+          "mappedType": "text"
         }
       },
       "name": "item_synonym",
@@ -737,23 +758,21 @@
         },
         "property_id": {
           "name": "property_id",
-          "type": "varchar(500)",
+          "type": "text",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "length": 500,
-          "mappedType": "string"
+          "mappedType": "text"
         },
         "value": {
           "name": "value",
-          "type": "varchar(8000)",
+          "type": "text",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": true,
-          "length": 8000,
-          "mappedType": "string"
+          "mappedType": "text"
         }
       },
       "name": "item_property",
@@ -799,33 +818,30 @@
         },
         "parent_item_id": {
           "name": "parent_item_id",
-          "type": "varchar(500)",
+          "type": "text",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "length": 500,
-          "mappedType": "string"
+          "mappedType": "text"
         },
         "parent_taxonomy_group_id": {
           "name": "parent_taxonomy_group_id",
-          "type": "varchar(255)",
+          "type": "text",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": true,
-          "length": 500,
-          "mappedType": "string"
+          "mappedType": "text"
         },
         "parent_id": {
           "name": "parent_id",
-          "type": "varchar(500)",
+          "type": "text",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": true,
-          "length": 500,
-          "mappedType": "string"
+          "mappedType": "text"
         }
       },
       "name": "item_parent",
@@ -887,41 +903,39 @@
       "columns": {
         "item_taxonomy_group_id": {
           "name": "item_taxonomy_group_id",
-          "type": "varchar(255)",
+          "type": "text",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "length": 500,
-          "mappedType": "string"
+          "mappedType": "text"
         },
         "item_id": {
           "name": "item_id",
-          "type": "varchar(500)",
+          "type": "text",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "length": 500,
-          "mappedType": "string"
+          "mappedType": "text"
         },
         "language_id": {
           "name": "language_id",
-          "type": "varchar(255)",
+          "type": "text",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "mappedType": "string"
+          "mappedType": "text"
         },
         "name": {
           "name": "name",
-          "type": "varchar(255)",
+          "type": "text",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "mappedType": "string"
+          "mappedType": "text"
         }
       },
       "name": "item_name",
@@ -973,42 +987,39 @@
       "columns": {
         "item_taxonomy_group_id": {
           "name": "item_taxonomy_group_id",
-          "type": "varchar(255)",
+          "type": "text",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "length": 500,
-          "mappedType": "string"
+          "mappedType": "text"
         },
         "item_id": {
           "name": "item_id",
-          "type": "varchar(500)",
+          "type": "text",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "length": 500,
-          "mappedType": "string"
+          "mappedType": "text"
         },
         "language_id": {
           "name": "language_id",
-          "type": "varchar(255)",
+          "type": "text",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "mappedType": "string"
+          "mappedType": "text"
         },
         "description": {
           "name": "description",
-          "type": "varchar(8000)",
+          "type": "text",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "length": 8000,
-          "mappedType": "string"
+          "mappedType": "text"
         }
       },
       "name": "item_description",
@@ -1069,30 +1080,30 @@
         },
         "taxonomy_group_id": {
           "name": "taxonomy_group_id",
-          "type": "varchar(255)",
+          "type": "text",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "mappedType": "string"
+          "mappedType": "text"
         },
         "language_id": {
           "name": "language_id",
-          "type": "varchar(255)",
+          "type": "text",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "mappedType": "string"
+          "mappedType": "text"
         },
         "stop_word": {
           "name": "stop_word",
-          "type": "varchar(255)",
+          "type": "text",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "mappedType": "string"
+          "mappedType": "text"
         }
       },
       "name": "taxonomy_stopword",
@@ -1160,30 +1171,30 @@
         },
         "taxonomy_group_id": {
           "name": "taxonomy_group_id",
-          "type": "varchar(255)",
+          "type": "text",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "mappedType": "string"
+          "mappedType": "text"
         },
         "language_id": {
           "name": "language_id",
-          "type": "varchar(255)",
+          "type": "text",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "mappedType": "string"
+          "mappedType": "text"
         },
         "root_word": {
           "name": "root_word",
-          "type": "varchar(255)",
+          "type": "text",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "mappedType": "string"
+          "mappedType": "text"
         }
       },
       "name": "taxonomy_synonym_root",
@@ -1251,30 +1262,30 @@
         },
         "taxonomy_group_id": {
           "name": "taxonomy_group_id",
-          "type": "varchar(255)",
+          "type": "text",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "mappedType": "string"
+          "mappedType": "text"
         },
         "language_id": {
           "name": "language_id",
-          "type": "varchar(255)",
+          "type": "text",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "mappedType": "string"
+          "mappedType": "text"
         },
         "synonym": {
           "name": "synonym",
-          "type": "varchar(255)",
+          "type": "text",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "mappedType": "string"
+          "mappedType": "text"
         },
         "root_word_id": {
           "name": "root_word_id",

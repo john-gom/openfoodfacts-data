@@ -11,7 +11,7 @@ export class ItemDescription extends BaseEntity {
   @ManyToOne({ primary: true })
   language!: Language;
 
-  @Property({ length: 8000 })
+  @Property()
   description!: string;
 
   constructor(item: Item, language: Language, description: string) {
