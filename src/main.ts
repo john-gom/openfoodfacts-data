@@ -15,10 +15,14 @@ async function bootstrap() {
         allowExplain: true,
         simpleCollections: 'only',
         disableDefaultMutations: true,
-        appendPlugins: [require("@graphile-contrib/pg-simplify-inflector")],
+        appendPlugins: [
+          require('@graphile-contrib/pg-simplify-inflector'),
+          require('postgraphile-plugin-connection-filter')
+        ],
         graphileBuildOptions: {
           pgOmitListSuffix: true,
           pgSimplifyAllRows: true,
+          connectionFilterRelations: true,
         },
       }
     )
