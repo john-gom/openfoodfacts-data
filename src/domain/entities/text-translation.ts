@@ -1,10 +1,10 @@
 import { Entity, ManyToOne, Property } from '@mikro-orm/core';
 import { Language } from './language';
-import { BaseEntity } from './base-entity';
 import { TextContent } from './text-content';
+import { TaxonomyEntity } from './taxonomy-entity';
 
 @Entity()
-export class TextTranslation extends BaseEntity {
+export class TextTranslation extends TaxonomyEntity {
   @ManyToOne({ primary: true })
   textContent!: TextContent;
 
@@ -14,8 +14,8 @@ export class TextTranslation extends BaseEntity {
   @Property()
   translatedText!: string;
 
-  constructor(textContent: TextContent, language: Language, translatedText: string) {
-    super();
+  constructor(textContent: TextContent, language: Language, translatedText: string, originalLine?: number) {
+    super(originalLine);
     this.textContent = textContent;
     this.language = language;
     this.translatedText = translatedText;

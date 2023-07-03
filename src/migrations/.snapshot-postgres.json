@@ -240,6 +240,75 @@
     },
     {
       "columns": {
+        "taxonomy_id": {
+          "name": "taxonomy_id",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "text"
+        },
+        "original_line": {
+          "name": "original_line",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "integer"
+        },
+        "original_position": {
+          "name": "original_position",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "integer"
+        },
+        "value": {
+          "name": "value",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "text"
+        }
+      },
+      "name": "taxonomy_comment",
+      "schema": "off",
+      "indexes": [
+        {
+          "keyName": "taxonomy_comment_pkey",
+          "columnNames": [
+            "taxonomy_id",
+            "original_line"
+          ],
+          "composite": true,
+          "primary": true,
+          "unique": true
+        }
+      ],
+      "checks": [],
+      "foreignKeys": {
+        "taxonomy_comment_taxonomy_id_foreign": {
+          "constraintName": "taxonomy_comment_taxonomy_id_foreign",
+          "columnNames": [
+            "taxonomy_id"
+          ],
+          "localTableName": "off.taxonomy_comment",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "off.taxonomy",
+          "updateRule": "cascade"
+        }
+      }
+    },
+    {
+      "columns": {
         "id": {
           "name": "id",
           "type": "uuid",
@@ -248,6 +317,24 @@
           "primary": false,
           "nullable": false,
           "mappedType": "uuid"
+        },
+        "original_line": {
+          "name": "original_line",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "integer"
+        },
+        "original_position": {
+          "name": "original_position",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "integer"
         },
         "taxonomy_group_id": {
           "name": "taxonomy_group_id",
@@ -431,6 +518,24 @@
           "nullable": false,
           "mappedType": "uuid"
         },
+        "original_line": {
+          "name": "original_line",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "integer"
+        },
+        "original_position": {
+          "name": "original_position",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "integer"
+        },
         "taxonomy_group_id": {
           "name": "taxonomy_group_id",
           "type": "text",
@@ -542,6 +647,24 @@
           "primary": false,
           "nullable": false,
           "mappedType": "uuid"
+        },
+        "original_line": {
+          "name": "original_line",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "integer"
+        },
+        "original_position": {
+          "name": "original_position",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "integer"
         },
         "subject": {
           "name": "subject",
@@ -726,6 +849,24 @@
           "nullable": false,
           "mappedType": "uuid"
         },
+        "original_line": {
+          "name": "original_line",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "integer"
+        },
+        "original_position": {
+          "name": "original_position",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "integer"
+        },
         "taxonomy_group_id": {
           "name": "taxonomy_group_id",
           "type": "text",
@@ -867,6 +1008,24 @@
           "nullable": false,
           "mappedType": "text"
         },
+        "original_line": {
+          "name": "original_line",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "integer"
+        },
+        "original_position": {
+          "name": "original_position",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "integer"
+        },
         "value": {
           "name": "value",
           "type": "text",
@@ -938,6 +1097,24 @@
           "primary": false,
           "nullable": false,
           "mappedType": "text"
+        },
+        "original_line": {
+          "name": "original_line",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "integer"
+        },
+        "original_position": {
+          "name": "original_position",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "integer"
         },
         "parent_taxonomy_group_id": {
           "name": "parent_taxonomy_group_id",
@@ -1502,6 +1679,24 @@
           "primary": false,
           "nullable": false,
           "mappedType": "text"
+        },
+        "original_line": {
+          "name": "original_line",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "integer"
+        },
+        "original_position": {
+          "name": "original_position",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "integer"
         },
         "translated_text": {
           "name": "translated_text",

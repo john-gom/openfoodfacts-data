@@ -2,12 +2,12 @@ import { Entity, ManyToOne, PrimaryKey, Property, Unique } from '@mikro-orm/core
 import { Language } from './language';
 import { TaxonomySynonymRoot } from './taxonomy-synonym-root';
 import { Ulid } from 'id128';
-import { BaseEntity } from './base-entity';
 import { TaxonomyGroup } from './taxonomy-group';
+import { TaxonomyEntity } from './taxonomy-entity';
 
 @Entity()
 @Unique({ properties: ['taxonomyGroup', 'language', 'synonym'] })
-export class TaxonomySynonym extends BaseEntity {
+export class TaxonomySynonym extends TaxonomyEntity {
   @PrimaryKey({ type: 'uuid' })
   id = Ulid.generate().toRaw();
 
@@ -23,8 +23,8 @@ export class TaxonomySynonym extends BaseEntity {
   @ManyToOne()
   rootWord!: TaxonomySynonymRoot;
 
-  constructor(taxonomyGroup: TaxonomyGroup, language: Language, rootWord: TaxonomySynonymRoot, synonym: string) {
-    super();
+  constructor(taxonomyGroup: TaxonomyGroup, language: Language, rootWord: TaxonomySynonymRoot, synonym: string, originalLine?: number, originalPosition?: number) {
+    super(originalLine, originalPosition);
     this.taxonomyGroup = taxonomyGroup;
     this.language = language;
     this.rootWord = rootWord;

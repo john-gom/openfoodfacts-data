@@ -1,4 +1,4 @@
-import { EntityManager, QueryOrder } from "@mikro-orm/core";
+import { EntityManager, EntityName, QueryOrder } from "@mikro-orm/core";
 import { Injectable } from "@nestjs/common";
 import { MongoClient } from "mongodb";
 import { Product } from "../entities/product";
@@ -93,24 +93,27 @@ export class ProductService {
   }
 
   async deleteProducts(update) {
-    //await this.deleteProductChildren();
+    await this.deleteProductChildren();
     if (!update) {
-      console.log('Deleting old products');
-      await this.em.nativeDelete(Product, {});
+      await this.deleteAndFlush(Product);
     }
   }
 
   async deleteProductChildren() {
-    console.log('Deleting product child data');
-    await this.em.nativeDelete(ProductTag, {});
-    await this.em.nativeDelete(ProductIngredient, {});
-    await this.em.nativeDelete(ProductNutrient, {});
+    await this.deleteAndFlush(ProductTag);
+    await this.deleteAndFlush(ProductIngredient);
+    await this.deleteAndFlush(ProductNutrient);
+  }
+
+  async deleteAndFlush(entityName: Function) {
+    console.log('Deleting ' + entityName.name);
+    await this.em.nativeDelete(entityName, {});
+    await this.em.flush();
   }
 
   fixupProduct(product: Product, data: any): Product {
     //product.data = data;
     product.name = data.product_name;
-    /*
     product.code = data.code;
     product.ingredientsText = data.ingredients_text;
     product.NutritionAsSoldPer = data.nutrition_data_per;
@@ -128,7 +131,7 @@ export class ProductService {
 
     this.importIngredients(product, 0, data.ingredients);
     this.importNutrients(product, data.nutriments);
-*/
+
     return product;
   }
 

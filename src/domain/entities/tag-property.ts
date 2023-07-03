@@ -1,9 +1,9 @@
 import { Entity, ManyToOne, PrimaryKey, Property } from '@mikro-orm/core';
-import { BaseEntity } from './base-entity';
 import { Tag } from './tag';
+import { TaxonomyEntity } from './taxonomy-entity';
 
 @Entity()
-export class TagProperty extends BaseEntity {
+export class TagProperty extends TaxonomyEntity {
   @ManyToOne({ primary: true })
   tag!: Tag;
 
@@ -13,8 +13,8 @@ export class TagProperty extends BaseEntity {
   @Property()
   value?: string;
 
-  constructor(tag: Tag, propertyId: string, value: string) {
-    super();
+  constructor(tag: Tag, propertyId: string, value: string, originalLine?: number) {
+    super(originalLine);
     this.tag = tag;
     this.propertyId = propertyId;
     this.value = value;
