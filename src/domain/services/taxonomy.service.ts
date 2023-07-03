@@ -1,5 +1,5 @@
 import { EntityManager } from "@mikro-orm/core";
-import { Injectable, Logger } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { Taxonomy } from "../entities/taxonomy";
 import { TaxonomySynonymRoot } from "../entities/taxonomy-synonym-root";
 import { Language } from "../entities/language";
@@ -7,12 +7,12 @@ import { TaxonomySynonym } from "../entities/taxonomy-synonym";
 import { TaxonomyStopword } from "../entities/taxonomy-stopword";
 import { BaseEntity } from "../entities/base-entity";
 import { Tag } from "../entities/tag";
-import { TagName } from "../entities/tag-name";
 import { TagSynonym } from "../entities/tag-synonym";
-import { TagDescription } from "../entities/tag-description";
 import { TagProperty } from "../entities/tag-property";
 import { TagParent } from "../entities/tag-parent";
 import { TaxonomyGroup } from "../entities/taxonomy-group";
+import { TextTranslation } from "../entities/text-translation";
+import { TextContent } from "../entities/text-content";
 
 const taxonomyGroups = {
   'traces': ['allergens'],
@@ -47,19 +47,29 @@ export class TaxonomyService {
   }
   async importFromGit() {
     await this.em.transactional(async (em) => {
-      this.log("Deleting Tags");
+      this.log("Deleting Tag Properties");
       await em.nativeDelete(TagProperty, {});
+      this.log("Deleting Tag Parents");
       await em.nativeDelete(TagParent, {});
+      this.log("Deleting Tag Synonyms");
       await em.nativeDelete(TagSynonym, {});
-      await em.nativeDelete(TagDescription, {});
-      await em.nativeDelete(TagName, {});
+      this.log("Deleting Tags");
       await em.nativeDelete(Tag, {});
 
-      this.log("Deleting Taxonomies");
+      this.log("Deleting Translations");
+      await em.nativeDelete(TextTranslation, {});
+      this.log("Deleting Text Content");
+      await em.nativeDelete(TextContent, {});
+
+      this.log("Deleting Taxonomy Stopwords");
       await em.nativeDelete(TaxonomyStopword, {});
+      this.log("Deleting Taxonomy Synonyms");
       await em.nativeDelete(TaxonomySynonym, {});
+      this.log("Deleting Taxonomy Synonym Roots");
       await em.nativeDelete(TaxonomySynonymRoot, {});
+      this.log("Deleting Taxonomies");
       await em.nativeDelete(Taxonomy, {});
+      this.log("Deleting Taxonomy Groups");
       await em.nativeDelete(TaxonomyGroup, {});
 
       this.log("Deleting Languages");
@@ -166,8 +176,9 @@ export class TaxonomyService {
             if (!tag && languagePrefix.test(line.originalLine)) {
               let words = this.remainder(parts, 1).split(',');
               let language = this.upsert(new Language(parts[0]), line, false);
-              tag = this.upsert(new Tag(taxonomy, language, words[0]), line);
-              this.upsert(new TagName(tag, language, words[0].trim()), line);
+              const name = new TextContent(id, language, words[0]);
+              tag = this.upsert(new Tag(taxonomy, language, words[0], name), line);
+              this.upsert(new TextTranslation(name, language, words[0].trim()), line);
               for (const synonym of words) {
                 this.upsert(new TagSynonym(tag, language, synonym.trim()), line);
               }
@@ -195,13 +206,17 @@ export class TaxonomyService {
             } else if (languagePrefix.test(line.originalLine) || parts.length === 2) {
               const language = this.upsert(new Language(parts[0]), line, false);
               const words = this.remainder(parts, 1).split(',');
-              this.upsert(new TagName(tag, language, words[0].trim()), line);
+              this.upsert(new TextTranslation(tag.name, language, words[0].trim()), line);
               for (const synonym of words) {
                 this.upsert(new TagSynonym(tag, language, synonym.trim()), line);
               }
             } else if (parts[0] === 'description') {
               const language = this.upsert(new Language(parts[1]), line, false);
-              this.upsert(new TagDescription(tag, language, this.remainder(parts, 2).trim()), line);
+              const text = this.remainder(parts, 2).trim();
+              if (!tag.description) {
+                tag.description = new TextContent(tag.name.asSubject(), language, text);
+              }
+              this.upsert(new TextTranslation(tag.description, language, text), line);
             } else {
               // Must be a property
               this.upsert(new TagProperty(tag, `${parts[0]}:${parts[1]}`, this.remainder(parts, 2).trim()), line);
@@ -223,7 +238,7 @@ export class TaxonomyService {
     const existingEntity = cache?.[dataString];
     if (existingEntity) {
       if (logDuplicates)
-        this.log(`Duplicate: ${entityType}: '${dataString}' at ${line.lineNumber} in ${line.file}: '${line.originalLine}'`);
+        this.log(`Duplicate: ${entityType}: '${entity.friendlyKey()}' at ${line.lineNumber} in ${line.file}: '${line.originalLine}'`);
 
       return existingEntity;
     } else {

@@ -176,6 +176,368 @@
     },
     {
       "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "uuid"
+        },
+        "taxonomy_group_id": {
+          "name": "taxonomy_group_id",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "text"
+        },
+        "language_id": {
+          "name": "language_id",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "text"
+        },
+        "stop_word": {
+          "name": "stop_word",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "text"
+        }
+      },
+      "name": "taxonomy_stopword",
+      "schema": "off",
+      "indexes": [
+        {
+          "keyName": "taxonomy_stopword_taxonomy_group_id_language_id_stop_word_unique",
+          "columnNames": [
+            "taxonomy_group_id",
+            "language_id",
+            "stop_word"
+          ],
+          "composite": true,
+          "primary": false,
+          "unique": true
+        },
+        {
+          "keyName": "taxonomy_stopword_pkey",
+          "columnNames": [
+            "id"
+          ],
+          "composite": false,
+          "primary": true,
+          "unique": true
+        }
+      ],
+      "checks": [],
+      "foreignKeys": {
+        "taxonomy_stopword_taxonomy_group_id_foreign": {
+          "constraintName": "taxonomy_stopword_taxonomy_group_id_foreign",
+          "columnNames": [
+            "taxonomy_group_id"
+          ],
+          "localTableName": "off.taxonomy_stopword",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "off.taxonomy_group",
+          "updateRule": "cascade"
+        },
+        "taxonomy_stopword_language_id_foreign": {
+          "constraintName": "taxonomy_stopword_language_id_foreign",
+          "columnNames": [
+            "language_id"
+          ],
+          "localTableName": "off.taxonomy_stopword",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "off.language",
+          "updateRule": "cascade"
+        }
+      }
+    },
+    {
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "uuid"
+        },
+        "taxonomy_group_id": {
+          "name": "taxonomy_group_id",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "text"
+        },
+        "language_id": {
+          "name": "language_id",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "text"
+        },
+        "root_word": {
+          "name": "root_word",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "text"
+        }
+      },
+      "name": "taxonomy_synonym_root",
+      "schema": "off",
+      "indexes": [
+        {
+          "keyName": "taxonomy_synonym_root_taxonomy_group_id_language_i_b2ae4_unique",
+          "columnNames": [
+            "taxonomy_group_id",
+            "language_id",
+            "root_word"
+          ],
+          "composite": true,
+          "primary": false,
+          "unique": true
+        },
+        {
+          "keyName": "taxonomy_synonym_root_pkey",
+          "columnNames": [
+            "id"
+          ],
+          "composite": false,
+          "primary": true,
+          "unique": true
+        }
+      ],
+      "checks": [],
+      "foreignKeys": {
+        "taxonomy_synonym_root_taxonomy_group_id_foreign": {
+          "constraintName": "taxonomy_synonym_root_taxonomy_group_id_foreign",
+          "columnNames": [
+            "taxonomy_group_id"
+          ],
+          "localTableName": "off.taxonomy_synonym_root",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "off.taxonomy_group",
+          "updateRule": "cascade"
+        },
+        "taxonomy_synonym_root_language_id_foreign": {
+          "constraintName": "taxonomy_synonym_root_language_id_foreign",
+          "columnNames": [
+            "language_id"
+          ],
+          "localTableName": "off.taxonomy_synonym_root",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "off.language",
+          "updateRule": "cascade"
+        }
+      }
+    },
+    {
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "uuid"
+        },
+        "taxonomy_group_id": {
+          "name": "taxonomy_group_id",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "text"
+        },
+        "language_id": {
+          "name": "language_id",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "text"
+        },
+        "synonym": {
+          "name": "synonym",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "text"
+        },
+        "root_word_id": {
+          "name": "root_word_id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "uuid"
+        }
+      },
+      "name": "taxonomy_synonym",
+      "schema": "off",
+      "indexes": [
+        {
+          "keyName": "taxonomy_synonym_taxonomy_group_id_language_id_synonym_unique",
+          "columnNames": [
+            "taxonomy_group_id",
+            "language_id",
+            "synonym"
+          ],
+          "composite": true,
+          "primary": false,
+          "unique": true
+        },
+        {
+          "keyName": "taxonomy_synonym_pkey",
+          "columnNames": [
+            "id"
+          ],
+          "composite": false,
+          "primary": true,
+          "unique": true
+        }
+      ],
+      "checks": [],
+      "foreignKeys": {
+        "taxonomy_synonym_taxonomy_group_id_foreign": {
+          "constraintName": "taxonomy_synonym_taxonomy_group_id_foreign",
+          "columnNames": [
+            "taxonomy_group_id"
+          ],
+          "localTableName": "off.taxonomy_synonym",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "off.taxonomy_group",
+          "updateRule": "cascade"
+        },
+        "taxonomy_synonym_language_id_foreign": {
+          "constraintName": "taxonomy_synonym_language_id_foreign",
+          "columnNames": [
+            "language_id"
+          ],
+          "localTableName": "off.taxonomy_synonym",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "off.language",
+          "updateRule": "cascade"
+        },
+        "taxonomy_synonym_root_word_id_foreign": {
+          "constraintName": "taxonomy_synonym_root_word_id_foreign",
+          "columnNames": [
+            "root_word_id"
+          ],
+          "localTableName": "off.taxonomy_synonym",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "off.taxonomy_synonym_root",
+          "updateRule": "cascade"
+        }
+      }
+    },
+    {
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "uuid"
+        },
+        "subject": {
+          "name": "subject",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "text"
+        },
+        "original_language_id": {
+          "name": "original_language_id",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "text"
+        },
+        "original_text": {
+          "name": "original_text",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "text"
+        }
+      },
+      "name": "text_content",
+      "schema": "off",
+      "indexes": [
+        {
+          "keyName": "text_content_pkey",
+          "columnNames": [
+            "id"
+          ],
+          "composite": false,
+          "primary": true,
+          "unique": true
+        }
+      ],
+      "checks": [],
+      "foreignKeys": {
+        "text_content_original_language_id_foreign": {
+          "constraintName": "text_content_original_language_id_foreign",
+          "columnNames": [
+            "original_language_id"
+          ],
+          "localTableName": "off.text_content",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "off.language",
+          "updateRule": "cascade"
+        }
+      }
+    },
+    {
+      "columns": {
         "taxonomy_group_id": {
           "name": "taxonomy_group_id",
           "type": "text",
@@ -202,6 +564,24 @@
           "primary": false,
           "nullable": false,
           "mappedType": "text"
+        },
+        "name_id": {
+          "name": "name_id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "uuid"
+        },
+        "description_id": {
+          "name": "description_id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "uuid"
         }
       },
       "name": "tag",
@@ -242,6 +622,31 @@
             "id"
           ],
           "referencedTableName": "off.taxonomy",
+          "updateRule": "cascade"
+        },
+        "tag_name_id_foreign": {
+          "constraintName": "tag_name_id_foreign",
+          "columnNames": [
+            "name_id"
+          ],
+          "localTableName": "off.tag",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "off.text_content",
+          "updateRule": "cascade"
+        },
+        "tag_description_id_foreign": {
+          "constraintName": "tag_description_id_foreign",
+          "columnNames": [
+            "description_id"
+          ],
+          "localTableName": "off.tag",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "off.text_content",
+          "deleteRule": "set null",
           "updateRule": "cascade"
         }
       }
@@ -549,174 +954,6 @@
     },
     {
       "columns": {
-        "tag_taxonomy_group_id": {
-          "name": "tag_taxonomy_group_id",
-          "type": "text",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "mappedType": "text"
-        },
-        "tag_id": {
-          "name": "tag_id",
-          "type": "text",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "mappedType": "text"
-        },
-        "language_id": {
-          "name": "language_id",
-          "type": "text",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "mappedType": "text"
-        },
-        "name": {
-          "name": "name",
-          "type": "text",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "mappedType": "text"
-        }
-      },
-      "name": "tag_name",
-      "schema": "off",
-      "indexes": [
-        {
-          "keyName": "tag_name_pkey",
-          "columnNames": [
-            "tag_taxonomy_group_id",
-            "tag_id",
-            "language_id"
-          ],
-          "composite": true,
-          "primary": true,
-          "unique": true
-        }
-      ],
-      "checks": [],
-      "foreignKeys": {
-        "tag_name_tag_taxonomy_group_id_tag_id_foreign": {
-          "constraintName": "tag_name_tag_taxonomy_group_id_tag_id_foreign",
-          "columnNames": [
-            "tag_taxonomy_group_id",
-            "tag_id"
-          ],
-          "localTableName": "off.tag_name",
-          "referencedColumnNames": [
-            "taxonomy_group_id",
-            "id"
-          ],
-          "referencedTableName": "off.tag",
-          "updateRule": "cascade"
-        },
-        "tag_name_language_id_foreign": {
-          "constraintName": "tag_name_language_id_foreign",
-          "columnNames": [
-            "language_id"
-          ],
-          "localTableName": "off.tag_name",
-          "referencedColumnNames": [
-            "id"
-          ],
-          "referencedTableName": "off.language",
-          "updateRule": "cascade"
-        }
-      }
-    },
-    {
-      "columns": {
-        "tag_taxonomy_group_id": {
-          "name": "tag_taxonomy_group_id",
-          "type": "text",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "mappedType": "text"
-        },
-        "tag_id": {
-          "name": "tag_id",
-          "type": "text",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "mappedType": "text"
-        },
-        "language_id": {
-          "name": "language_id",
-          "type": "text",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "mappedType": "text"
-        },
-        "description": {
-          "name": "description",
-          "type": "text",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "mappedType": "text"
-        }
-      },
-      "name": "tag_description",
-      "schema": "off",
-      "indexes": [
-        {
-          "keyName": "tag_description_pkey",
-          "columnNames": [
-            "tag_taxonomy_group_id",
-            "tag_id",
-            "language_id"
-          ],
-          "composite": true,
-          "primary": true,
-          "unique": true
-        }
-      ],
-      "checks": [],
-      "foreignKeys": {
-        "tag_description_tag_taxonomy_group_id_tag_id_foreign": {
-          "constraintName": "tag_description_tag_taxonomy_group_id_tag_id_foreign",
-          "columnNames": [
-            "tag_taxonomy_group_id",
-            "tag_id"
-          ],
-          "localTableName": "off.tag_description",
-          "referencedColumnNames": [
-            "taxonomy_group_id",
-            "id"
-          ],
-          "referencedTableName": "off.tag",
-          "updateRule": "cascade"
-        },
-        "tag_description_language_id_foreign": {
-          "constraintName": "tag_description_language_id_foreign",
-          "columnNames": [
-            "language_id"
-          ],
-          "localTableName": "off.tag_description",
-          "referencedColumnNames": [
-            "id"
-          ],
-          "referencedTableName": "off.language",
-          "updateRule": "cascade"
-        }
-      }
-    },
-    {
-      "columns": {
         "product_id": {
           "name": "product_id",
           "type": "uuid",
@@ -1004,23 +1241,14 @@
     },
     {
       "columns": {
-        "id": {
-          "name": "id",
+        "text_content_id": {
+          "name": "text_content_id",
           "type": "uuid",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
           "mappedType": "uuid"
-        },
-        "taxonomy_group_id": {
-          "name": "taxonomy_group_id",
-          "type": "text",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "mappedType": "text"
         },
         "language_id": {
           "name": "language_id",
@@ -1031,8 +1259,8 @@
           "nullable": false,
           "mappedType": "text"
         },
-        "stop_word": {
-          "name": "stop_word",
+        "translated_text": {
+          "name": "translated_text",
           "type": "text",
           "unsigned": false,
           "autoincrement": false,
@@ -1041,257 +1269,44 @@
           "mappedType": "text"
         }
       },
-      "name": "taxonomy_stopword",
+      "name": "text_translation",
       "schema": "off",
       "indexes": [
         {
-          "keyName": "taxonomy_stopword_taxonomy_group_id_language_id_stop_word_unique",
+          "keyName": "text_translation_pkey",
           "columnNames": [
-            "taxonomy_group_id",
-            "language_id",
-            "stop_word"
+            "text_content_id",
+            "language_id"
           ],
           "composite": true,
-          "primary": false,
-          "unique": true
-        },
-        {
-          "keyName": "taxonomy_stopword_pkey",
-          "columnNames": [
-            "id"
-          ],
-          "composite": false,
           "primary": true,
           "unique": true
         }
       ],
       "checks": [],
       "foreignKeys": {
-        "taxonomy_stopword_taxonomy_group_id_foreign": {
-          "constraintName": "taxonomy_stopword_taxonomy_group_id_foreign",
+        "text_translation_text_content_id_foreign": {
+          "constraintName": "text_translation_text_content_id_foreign",
           "columnNames": [
-            "taxonomy_group_id"
+            "text_content_id"
           ],
-          "localTableName": "off.taxonomy_stopword",
+          "localTableName": "off.text_translation",
           "referencedColumnNames": [
             "id"
           ],
-          "referencedTableName": "off.taxonomy_group",
+          "referencedTableName": "off.text_content",
           "updateRule": "cascade"
         },
-        "taxonomy_stopword_language_id_foreign": {
-          "constraintName": "taxonomy_stopword_language_id_foreign",
+        "text_translation_language_id_foreign": {
+          "constraintName": "text_translation_language_id_foreign",
           "columnNames": [
             "language_id"
           ],
-          "localTableName": "off.taxonomy_stopword",
+          "localTableName": "off.text_translation",
           "referencedColumnNames": [
             "id"
           ],
           "referencedTableName": "off.language",
-          "updateRule": "cascade"
-        }
-      }
-    },
-    {
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "uuid",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "mappedType": "uuid"
-        },
-        "taxonomy_group_id": {
-          "name": "taxonomy_group_id",
-          "type": "text",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "mappedType": "text"
-        },
-        "language_id": {
-          "name": "language_id",
-          "type": "text",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "mappedType": "text"
-        },
-        "root_word": {
-          "name": "root_word",
-          "type": "text",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "mappedType": "text"
-        }
-      },
-      "name": "taxonomy_synonym_root",
-      "schema": "off",
-      "indexes": [
-        {
-          "keyName": "taxonomy_synonym_root_taxonomy_group_id_language_i_b2ae4_unique",
-          "columnNames": [
-            "taxonomy_group_id",
-            "language_id",
-            "root_word"
-          ],
-          "composite": true,
-          "primary": false,
-          "unique": true
-        },
-        {
-          "keyName": "taxonomy_synonym_root_pkey",
-          "columnNames": [
-            "id"
-          ],
-          "composite": false,
-          "primary": true,
-          "unique": true
-        }
-      ],
-      "checks": [],
-      "foreignKeys": {
-        "taxonomy_synonym_root_taxonomy_group_id_foreign": {
-          "constraintName": "taxonomy_synonym_root_taxonomy_group_id_foreign",
-          "columnNames": [
-            "taxonomy_group_id"
-          ],
-          "localTableName": "off.taxonomy_synonym_root",
-          "referencedColumnNames": [
-            "id"
-          ],
-          "referencedTableName": "off.taxonomy_group",
-          "updateRule": "cascade"
-        },
-        "taxonomy_synonym_root_language_id_foreign": {
-          "constraintName": "taxonomy_synonym_root_language_id_foreign",
-          "columnNames": [
-            "language_id"
-          ],
-          "localTableName": "off.taxonomy_synonym_root",
-          "referencedColumnNames": [
-            "id"
-          ],
-          "referencedTableName": "off.language",
-          "updateRule": "cascade"
-        }
-      }
-    },
-    {
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "uuid",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "mappedType": "uuid"
-        },
-        "taxonomy_group_id": {
-          "name": "taxonomy_group_id",
-          "type": "text",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "mappedType": "text"
-        },
-        "language_id": {
-          "name": "language_id",
-          "type": "text",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "mappedType": "text"
-        },
-        "synonym": {
-          "name": "synonym",
-          "type": "text",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "mappedType": "text"
-        },
-        "root_word_id": {
-          "name": "root_word_id",
-          "type": "uuid",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "mappedType": "uuid"
-        }
-      },
-      "name": "taxonomy_synonym",
-      "schema": "off",
-      "indexes": [
-        {
-          "keyName": "taxonomy_synonym_taxonomy_group_id_language_id_synonym_unique",
-          "columnNames": [
-            "taxonomy_group_id",
-            "language_id",
-            "synonym"
-          ],
-          "composite": true,
-          "primary": false,
-          "unique": true
-        },
-        {
-          "keyName": "taxonomy_synonym_pkey",
-          "columnNames": [
-            "id"
-          ],
-          "composite": false,
-          "primary": true,
-          "unique": true
-        }
-      ],
-      "checks": [],
-      "foreignKeys": {
-        "taxonomy_synonym_taxonomy_group_id_foreign": {
-          "constraintName": "taxonomy_synonym_taxonomy_group_id_foreign",
-          "columnNames": [
-            "taxonomy_group_id"
-          ],
-          "localTableName": "off.taxonomy_synonym",
-          "referencedColumnNames": [
-            "id"
-          ],
-          "referencedTableName": "off.taxonomy_group",
-          "updateRule": "cascade"
-        },
-        "taxonomy_synonym_language_id_foreign": {
-          "constraintName": "taxonomy_synonym_language_id_foreign",
-          "columnNames": [
-            "language_id"
-          ],
-          "localTableName": "off.taxonomy_synonym",
-          "referencedColumnNames": [
-            "id"
-          ],
-          "referencedTableName": "off.language",
-          "updateRule": "cascade"
-        },
-        "taxonomy_synonym_root_word_id_foreign": {
-          "constraintName": "taxonomy_synonym_root_word_id_foreign",
-          "columnNames": [
-            "root_word_id"
-          ],
-          "localTableName": "off.taxonomy_synonym",
-          "referencedColumnNames": [
-            "id"
-          ],
-          "referencedTableName": "off.taxonomy_synonym_root",
           "updateRule": "cascade"
         }
       }

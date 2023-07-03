@@ -8,6 +8,10 @@ export abstract class BaseEntity {
     throw NotImplementedException;
   };
 
+  friendlyKey(): string {
+    return this.businessKey().join(':');
+  }
+
   normalizeId(id: string): string {
     // TODO: Swap synonyms and eliminate stopwords
     id = id.trim().normalize('NFC').toLowerCase();
