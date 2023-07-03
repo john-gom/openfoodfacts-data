@@ -17,12 +17,14 @@ async function bootstrap() {
         disableDefaultMutations: true,
         appendPlugins: [
           require('@graphile-contrib/pg-simplify-inflector'),
-          require('postgraphile-plugin-connection-filter')
+          require('postgraphile-plugin-connection-filter'),
+          require('@pyramation/postgraphile-plugin-fulltext-filter'),
         ],
         graphileBuildOptions: {
           pgOmitListSuffix: true,
           pgSimplifyAllRows: true,
           connectionFilterRelations: true,
+          connectionFilterUseListInflectors: true,
         },
       }
     )

@@ -1,7 +1,8 @@
-import { Collection, Entity, OneToMany, PrimaryKey, Property } from "@mikro-orm/core";
+import { Collection, Entity, Index, OneToMany, PrimaryKey, Property } from "@mikro-orm/core";
 import { ProductTag } from "./product-tag";
 import { ProductIngredient } from "./product-ingredient";
 import { Ulid } from "id128";
+import { FullTextType } from "@mikro-orm/postgresql";
 
 @Entity()
 export class Product {
@@ -13,6 +14,10 @@ export class Product {
 
   @Property()
   name?: string;
+
+  @Index({ type: 'fulltext' })
+  @Property<Product>({ type: FullTextType, onUpdate: (e) => e.name })
+  search?: string;
 
   @Property({ index: true })
   code?: string;

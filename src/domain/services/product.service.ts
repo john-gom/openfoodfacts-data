@@ -93,7 +93,7 @@ export class ProductService {
   }
 
   async deleteProducts(update) {
-    await this.deleteProductChildren();
+    //await this.deleteProductChildren();
     if (!update) {
       console.log('Deleting old products');
       await this.em.nativeDelete(Product, {});
@@ -110,6 +110,7 @@ export class ProductService {
   fixupProduct(product: Product, data: any): Product {
     //product.data = data;
     product.name = data.product_name;
+    /*
     product.code = data.code;
     product.ingredientsText = data.ingredients_text;
     product.NutritionAsSoldPer = data.nutrition_data_per;
@@ -127,7 +128,7 @@ export class ProductService {
 
     this.importIngredients(product, 0, data.ingredients);
     this.importNutrients(product, data.nutriments);
-
+*/
     return product;
   }
 

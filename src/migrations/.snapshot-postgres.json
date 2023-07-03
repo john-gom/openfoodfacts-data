@@ -61,6 +61,15 @@
           "nullable": true,
           "mappedType": "text"
         },
+        "search": {
+          "name": "search",
+          "type": "tsvector",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "unknown"
+        },
         "code": {
           "name": "code",
           "type": "text",
@@ -127,6 +136,16 @@
           "keyName": "product_code_index",
           "primary": false,
           "unique": false
+        },
+        {
+          "keyName": "product_search_index",
+          "columnNames": [
+            "search"
+          ],
+          "composite": false,
+          "primary": false,
+          "unique": false,
+          "type": "fulltext"
         },
         {
           "keyName": "product_pkey",
