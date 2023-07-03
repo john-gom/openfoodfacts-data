@@ -1,9 +1,9 @@
 import { Entity, ManyToOne, PrimaryKey, Property, Unique } from '@mikro-orm/core';
 import { Language } from './language';
 import { BaseEntity } from './base-entity';
-import { TagVersion } from './tag-version';
 import { Ulid } from 'id128';
 import { TaxonomyGroup } from './taxonomy-group';
+import { Tag } from './tag';
 
 @Entity()
 @Unique({ properties: ['taxonomyGroup', 'language', 'synonym'] })
@@ -18,15 +18,15 @@ export class TagSynonym extends BaseEntity {
   language!: Language;
 
   @ManyToOne()
-  tagVersion!: TagVersion;
+  tag!: Tag;
 
   @Property()
   synonym!: string;
 
-  constructor(tagVersion: TagVersion, language: Language, synonym: string) {
+  constructor(tag: Tag, language: Language, synonym: string) {
     super();
-    this.tagVersion = tagVersion;
-    this.taxonomyGroup = tagVersion.tag.taxonomy.group;
+    this.tag = tag;
+    this.taxonomyGroup = tag.taxonomy.group;
     this.language = language;
     this.synonym = this.normalizeId(synonym);
   }

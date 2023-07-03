@@ -202,29 +202,11 @@
           "primary": false,
           "nullable": false,
           "mappedType": "text"
-        },
-        "current_version_id": {
-          "name": "current_version_id",
-          "type": "uuid",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": true,
-          "mappedType": "uuid"
         }
       },
       "name": "tag",
       "schema": "off",
       "indexes": [
-        {
-          "columnNames": [
-            "current_version_id"
-          ],
-          "composite": false,
-          "keyName": "tag_current_version_id_unique",
-          "primary": false,
-          "unique": true
-        },
         {
           "keyName": "tag_pkey",
           "columnNames": [
@@ -261,110 +243,6 @@
           ],
           "referencedTableName": "off.taxonomy",
           "updateRule": "cascade"
-        },
-        "tag_current_version_id_foreign": {
-          "constraintName": "tag_current_version_id_foreign",
-          "columnNames": [
-            "current_version_id"
-          ],
-          "localTableName": "off.tag",
-          "referencedColumnNames": [
-            "id"
-          ],
-          "referencedTableName": "off.tag_version",
-          "deleteRule": "set null",
-          "updateRule": "cascade"
-        }
-      }
-    },
-    {
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "uuid",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "mappedType": "uuid"
-        },
-        "tag_taxonomy_group_id": {
-          "name": "tag_taxonomy_group_id",
-          "type": "text",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "mappedType": "text"
-        },
-        "tag_id": {
-          "name": "tag_id",
-          "type": "text",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "mappedType": "text"
-        },
-        "created_on": {
-          "name": "created_on",
-          "type": "timestamptz(0)",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "length": 6,
-          "mappedType": "datetime"
-        },
-        "valid_fron": {
-          "name": "valid_fron",
-          "type": "timestamptz(0)",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": true,
-          "length": 6,
-          "mappedType": "datetime"
-        },
-        "valid_to": {
-          "name": "valid_to",
-          "type": "timestamptz(0)",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": true,
-          "length": 6,
-          "mappedType": "datetime"
-        }
-      },
-      "name": "tag_version",
-      "schema": "off",
-      "indexes": [
-        {
-          "keyName": "tag_version_pkey",
-          "columnNames": [
-            "id"
-          ],
-          "composite": false,
-          "primary": true,
-          "unique": true
-        }
-      ],
-      "checks": [],
-      "foreignKeys": {
-        "tag_version_tag_taxonomy_group_id_tag_id_foreign": {
-          "constraintName": "tag_version_tag_taxonomy_group_id_tag_id_foreign",
-          "columnNames": [
-            "tag_taxonomy_group_id",
-            "tag_id"
-          ],
-          "localTableName": "off.tag_version",
-          "referencedColumnNames": [
-            "taxonomy_group_id",
-            "id"
-          ],
-          "referencedTableName": "off.tag",
-          "updateRule": "cascade"
         }
       }
     },
@@ -397,14 +275,23 @@
           "nullable": false,
           "mappedType": "text"
         },
-        "tag_version_id": {
-          "name": "tag_version_id",
-          "type": "uuid",
+        "tag_taxonomy_group_id": {
+          "name": "tag_taxonomy_group_id",
+          "type": "text",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "mappedType": "uuid"
+          "mappedType": "text"
+        },
+        "tag_id": {
+          "name": "tag_id",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "text"
         },
         "synonym": {
           "name": "synonym",
@@ -466,30 +353,41 @@
           "referencedTableName": "off.language",
           "updateRule": "cascade"
         },
-        "tag_synonym_tag_version_id_foreign": {
-          "constraintName": "tag_synonym_tag_version_id_foreign",
+        "tag_synonym_tag_taxonomy_group_id_tag_id_foreign": {
+          "constraintName": "tag_synonym_tag_taxonomy_group_id_tag_id_foreign",
           "columnNames": [
-            "tag_version_id"
+            "tag_taxonomy_group_id",
+            "tag_id"
           ],
           "localTableName": "off.tag_synonym",
           "referencedColumnNames": [
+            "taxonomy_group_id",
             "id"
           ],
-          "referencedTableName": "off.tag_version",
+          "referencedTableName": "off.tag",
           "updateRule": "cascade"
         }
       }
     },
     {
       "columns": {
-        "tag_version_id": {
-          "name": "tag_version_id",
-          "type": "uuid",
+        "tag_taxonomy_group_id": {
+          "name": "tag_taxonomy_group_id",
+          "type": "text",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "mappedType": "uuid"
+          "mappedType": "text"
+        },
+        "tag_id": {
+          "name": "tag_id",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "text"
         },
         "property_id": {
           "name": "property_id",
@@ -516,7 +414,8 @@
         {
           "keyName": "tag_property_pkey",
           "columnNames": [
-            "tag_version_id",
+            "tag_taxonomy_group_id",
+            "tag_id",
             "property_id"
           ],
           "composite": true,
@@ -526,33 +425,44 @@
       ],
       "checks": [],
       "foreignKeys": {
-        "tag_property_tag_version_id_foreign": {
-          "constraintName": "tag_property_tag_version_id_foreign",
+        "tag_property_tag_taxonomy_group_id_tag_id_foreign": {
+          "constraintName": "tag_property_tag_taxonomy_group_id_tag_id_foreign",
           "columnNames": [
-            "tag_version_id"
+            "tag_taxonomy_group_id",
+            "tag_id"
           ],
           "localTableName": "off.tag_property",
           "referencedColumnNames": [
+            "taxonomy_group_id",
             "id"
           ],
-          "referencedTableName": "off.tag_version",
+          "referencedTableName": "off.tag",
           "updateRule": "cascade"
         }
       }
     },
     {
       "columns": {
-        "tag_version_id": {
-          "name": "tag_version_id",
-          "type": "uuid",
+        "tag_taxonomy_group_id": {
+          "name": "tag_taxonomy_group_id",
+          "type": "text",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "mappedType": "uuid"
+          "mappedType": "text"
         },
-        "parent_tag_id": {
-          "name": "parent_tag_id",
+        "tag_id": {
+          "name": "tag_id",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "text"
+        },
+        "parent_value": {
+          "name": "parent_value",
           "type": "text",
           "unsigned": false,
           "autoincrement": false,
@@ -595,8 +505,9 @@
         {
           "keyName": "tag_parent_pkey",
           "columnNames": [
-            "tag_version_id",
-            "parent_tag_id"
+            "tag_taxonomy_group_id",
+            "tag_id",
+            "parent_value"
           ],
           "composite": true,
           "primary": true,
@@ -605,16 +516,18 @@
       ],
       "checks": [],
       "foreignKeys": {
-        "tag_parent_tag_version_id_foreign": {
-          "constraintName": "tag_parent_tag_version_id_foreign",
+        "tag_parent_tag_taxonomy_group_id_tag_id_foreign": {
+          "constraintName": "tag_parent_tag_taxonomy_group_id_tag_id_foreign",
           "columnNames": [
-            "tag_version_id"
+            "tag_taxonomy_group_id",
+            "tag_id"
           ],
           "localTableName": "off.tag_parent",
           "referencedColumnNames": [
+            "taxonomy_group_id",
             "id"
           ],
-          "referencedTableName": "off.tag_version",
+          "referencedTableName": "off.tag",
           "updateRule": "cascade"
         },
         "tag_parent_parent_taxonomy_group_id_parent_id_foreign": {
