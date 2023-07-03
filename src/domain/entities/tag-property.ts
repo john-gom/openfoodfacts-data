@@ -1,11 +1,11 @@
 import { Entity, ManyToOne, PrimaryKey, Property } from '@mikro-orm/core';
 import { BaseEntity } from './base-entity';
-import { ItemVersion } from './item-version';
+import { TagVersion } from './tag-version';
 
 @Entity()
-export class ItemProperty extends BaseEntity {
+export class TagProperty extends BaseEntity {
   @ManyToOne({ primary: true })
-  itemVersion!: ItemVersion;
+  tagVersion!: TagVersion;
 
   @PrimaryKey()
   propertyId!: string;
@@ -13,14 +13,14 @@ export class ItemProperty extends BaseEntity {
   @Property()
   value?: string;
 
-  constructor(itemVersion: ItemVersion, propertyId: string, value: string) {
+  constructor(tagVersion: TagVersion, propertyId: string, value: string) {
     super();
-    this.itemVersion = itemVersion;
+    this.tagVersion = tagVersion;
     this.propertyId = propertyId;
     this.value = value;
   }
 
   businessKey(): string[] {
-    return [...this.itemVersion.businessKey(), this.propertyId];
+    return [...this.tagVersion.businessKey(), this.propertyId];
   }
 }

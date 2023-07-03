@@ -1,5 +1,5 @@
 import { Collection, Entity, OneToMany, PrimaryKey, Property } from "@mikro-orm/core";
-import { ProductDataQualityTag } from "./product-data-quality-tag";
+import { ProductTag } from "./product-tag";
 import { ProductIngredient } from "./product-ingredient";
 import { Ulid } from "id128";
 
@@ -17,8 +17,8 @@ export class Product {
   @Property({ index: true })
   code?: string;
 
-  @OneToMany(() => ProductDataQualityTag, e => e.product)
-  dataQualityTags = new Collection<ProductDataQualityTag>(this);
+  @OneToMany(() => ProductTag, e => e.product)
+  dataQualityTags = new Collection<ProductTag>(this);
 
   @OneToMany(() => ProductIngredient, e => e.product)
   ingredients = new Collection<ProductIngredient>(this);

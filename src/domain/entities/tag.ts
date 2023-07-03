@@ -1,12 +1,12 @@
 import { Entity, ManyToOne, OneToOne, PrimaryKey, Rel } from '@mikro-orm/core';
 import { Taxonomy } from './taxonomy';
 import { BaseEntity } from './base-entity';
-import { ItemVersion } from './item-version';
+import { TagVersion } from './tag-version';
 import { TaxonomyGroup } from './taxonomy-group';
 import { Language } from './language';
 
 @Entity()
-export class Item extends BaseEntity {
+export class Tag extends BaseEntity {
   @ManyToOne({ primary: true })
   taxonomyGroup!: TaxonomyGroup;
 
@@ -17,7 +17,7 @@ export class Item extends BaseEntity {
   taxonomy!: Taxonomy;
 
   @OneToOne()
-  currentVersion?: ItemVersion;
+  currentVersion?: TagVersion;
 
   constructor(taxonomy: Taxonomy, language: Language, id: string) {
     super();

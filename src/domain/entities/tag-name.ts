@@ -1,12 +1,12 @@
 import { Entity, ManyToOne, PrimaryKey, Property } from '@mikro-orm/core';
 import { Language } from './language';
 import { BaseEntity } from './base-entity';
-import { Item } from './item';
+import { Tag } from './tag';
 
 @Entity()
-export class ItemName extends BaseEntity {
+export class TagName extends BaseEntity {
   @ManyToOne({ primary: true })
-  item!: Item;
+  tag!: Tag;
 
   @ManyToOne({ primary: true })
   language!: Language;
@@ -14,14 +14,14 @@ export class ItemName extends BaseEntity {
   @Property()
   name!: string;
 
-  constructor(item: Item, language: Language, name: string) {
+  constructor(tag: Tag, language: Language, name: string) {
     super();
-    this.item = item;
+    this.tag = tag;
     this.language = language;
     this.name = name;
   }
 
   businessKey(): string[] {
-    return [...this.item.businessKey(), ...this.language.businessKey()];
+    return [...this.tag.businessKey(), ...this.language.businessKey()];
   }
 }

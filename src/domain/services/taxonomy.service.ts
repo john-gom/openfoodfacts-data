@@ -6,13 +6,13 @@ import { Language } from "../entities/language";
 import { TaxonomySynonym } from "../entities/taxonomy-synonym";
 import { TaxonomyStopword } from "../entities/taxonomy-stopword";
 import { BaseEntity } from "../entities/base-entity";
-import { Item } from "../entities/item";
-import { ItemVersion } from "../entities/item-version";
-import { ItemName } from "../entities/item-name";
-import { ItemSynonym } from "../entities/item-synonym";
-import { ItemDescription } from "../entities/item-description";
-import { ItemProperty } from "../entities/item-property";
-import { ItemParent } from "../entities/item-parent";
+import { Tag } from "../entities/tag";
+import { TagVersion } from "../entities/tag-version";
+import { TagName } from "../entities/tag-name";
+import { TagSynonym } from "../entities/tag-synonym";
+import { TagDescription } from "../entities/tag-description";
+import { TagProperty } from "../entities/tag-property";
+import { TagParent } from "../entities/tag-parent";
 import { TaxonomyGroup } from "../entities/taxonomy-group";
 
 const taxonomyGroups = {
@@ -48,14 +48,14 @@ export class TaxonomyService {
   }
   async importFromGit() {
     await this.em.transactional(async (em) => {
-      this.log("Deleting Items");
-      await em.nativeDelete(ItemProperty, {});
-      await em.nativeDelete(ItemParent, {});
-      await em.nativeDelete(ItemSynonym, {});
-      await em.nativeDelete(ItemDescription, {});
-      await em.nativeDelete(ItemName, {});
-      await em.nativeDelete(ItemVersion, {});
-      await em.nativeDelete(Item, {});
+      this.log("Deleting Tags");
+      await em.nativeDelete(TagProperty, {});
+      await em.nativeDelete(TagParent, {});
+      await em.nativeDelete(TagSynonym, {});
+      await em.nativeDelete(TagDescription, {});
+      await em.nativeDelete(TagName, {});
+      await em.nativeDelete(TagVersion, {});
+      await em.nativeDelete(Tag, {});
 
       this.log("Deleting Taxonomies");
       await em.nativeDelete(TaxonomyStopword, {});
@@ -76,13 +76,13 @@ export class TaxonomyService {
     }
 
     // Assign parents
-    for (const parent of Object.values(this.existing[ItemParent.name])) {
-      const itemParent = parent as ItemParent;
+    for (const parent of Object.values(this.existing[TagParent.name])) {
+      const tagParent = parent as TagParent;
       // Note we match on anything in the same group
-      const parentParts = itemParent.parentItemId.split(':');
-      itemParent.parent = this.existing[ItemSynonym.name]
-      [`${itemParent.itemVersion.item.taxonomy.group.id}:${parentParts[0].trim()}:${parentParts[1].trim()}`]
-        ?.itemVersion?.item;
+      const parentParts = tagParent.parentTagId.split(':');
+      tagParent.parent = this.existing[TagSynonym.name]
+      [`${tagParent.tagVersion.tag.taxonomy.group.id}:${parentParts[0].trim()}:${parentParts[1].trim()}`]
+        ?.tagVersion?.tag;
     }
     await this.em.flush();
   }
@@ -163,17 +163,17 @@ export class TaxonomyService {
         } else {
           // A taxonomy entry. Read the block until the next blank line
           const entryLines = [];
-          let item: Item = null;
+          let tag: Tag = null;
           while (parts?.length > 1) {
-            if (!item && languagePrefix.test(line.originalLine)) {
+            if (!tag && languagePrefix.test(line.originalLine)) {
               let words = this.remainder(parts, 1).split(',');
               let language = this.upsert(new Language(parts[0]), line, false);
-              item = this.upsert(new Item(taxonomy, language, words[0]), line);
-              const itemVersion = this.upsert(new ItemVersion(item), line);
-              item.currentVersion = itemVersion;
-              this.upsert(new ItemName(item, language, words[0].trim()), line);
+              tag = this.upsert(new Tag(taxonomy, language, words[0]), line);
+              const tagVersion = this.upsert(new TagVersion(tag), line);
+              tag.currentVersion = tagVersion;
+              this.upsert(new TagName(tag, language, words[0].trim()), line);
               for (const synonym of words) {
-                this.upsert(new ItemSynonym(item.currentVersion, language, synonym.trim()), line);
+                this.upsert(new TagSynonym(tag.currentVersion, language, synonym.trim()), line);
               }
             } else {
               entryLines.push(line);
@@ -181,12 +181,12 @@ export class TaxonomyService {
             line = nextLine();
             parts = line?.parts;
             // If we get a blank line but don't have an id yet then skip it as some entries have a description with a space after
-            if (parts?.length < 2 && !item) {
+            if (parts?.length < 2 && !tag) {
               line = nextLine();
               parts = line.parts;
             }
           }
-          if (!item) {
+          if (!tag) {
             this.log(`No canonical id for group starting '${entryLines[0].originalLine}' at ${entryLines[0].lineNumber} in ${entryLines[0].file}`);
             continue;
           }
@@ -195,20 +195,20 @@ export class TaxonomyService {
             parts = line.parts;
             if (parts[0].startsWith('<')) {
               const language = this.upsert(new Language(parts[0].substring(1)), line, false);
-              this.upsert(new ItemParent(item.currentVersion, language, this.remainder(parts, 1)), line);
+              this.upsert(new TagParent(tag.currentVersion, language, this.remainder(parts, 1)), line);
             } else if (languagePrefix.test(line.originalLine) || parts.length === 2) {
               const language = this.upsert(new Language(parts[0]), line, false);
               const words = this.remainder(parts, 1).split(',');
-              this.upsert(new ItemName(item, language, words[0].trim()), line);
+              this.upsert(new TagName(tag, language, words[0].trim()), line);
               for (const synonym of words) {
-                this.upsert(new ItemSynonym(item.currentVersion, language, synonym.trim()), line);
+                this.upsert(new TagSynonym(tag.currentVersion, language, synonym.trim()), line);
               }
             } else if (parts[0] === 'description') {
               const language = this.upsert(new Language(parts[1]), line, false);
-              this.upsert(new ItemDescription(item, language, this.remainder(parts, 2).trim()), line);
+              this.upsert(new TagDescription(tag, language, this.remainder(parts, 2).trim()), line);
             } else {
               // Must be a property
-              this.upsert(new ItemProperty(item.currentVersion, `${parts[0]}:${parts[1]}`, this.remainder(parts, 2).trim()), line);
+              this.upsert(new TagProperty(tag.currentVersion, `${parts[0]}:${parts[1]}`, this.remainder(parts, 2).trim()), line);
             }
           }
         }

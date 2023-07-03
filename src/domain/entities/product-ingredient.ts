@@ -1,6 +1,6 @@
 import { Collection, Entity, ManyToOne, OneToMany, PrimaryKey, Property } from "@mikro-orm/core";
 import { Product } from "./product";
-import { Item } from "./item";
+import { Tag } from "./tag";
 
 @Entity()
 export class ProductIngredient {
@@ -29,7 +29,7 @@ export class ProductIngredient {
   percentEstimate?: number;
 
   @ManyToOne()
-  ingredient?: Item;
+  ingredient?: Tag;
 
   @OneToMany(() => ProductIngredient, e => e.parent)
   ingredients = new Collection<ProductIngredient>(this);

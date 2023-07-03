@@ -4,22 +4,23 @@ import { MongoClient } from "mongodb";
 import { Product } from "../entities/product";
 import * as fs from 'fs';
 import * as readline from 'readline';
-import { ProductDataQualityTag } from "../entities/product-data-quality-tag";
-import { Item } from "../entities/item";
+import { ProductTag } from "../entities/product-tag";
+import { Tag } from "../entities/tag";
 import { ProductIngredient } from "../entities/product-ingredient";
+import { Taxonomy } from "../entities/taxonomy";
 
 @Injectable()
 export class ProductService {
-  dataQualityTags: Item[];
-  ingredientTags: Item[];
+  dataQualityTags: Tag[];
+  ingredientTags: Tag[];
 
   // Lowish batch size seems to work best, probably due to the size of the product document
   importBatchSize = 20;
   constructor(private em: EntityManager) { }
 
   async cacheTags() {
-    this.dataQualityTags = await this.em.find(Item, { taxonomy: { id: 'data_quality' } });
-    this.ingredientTags = await this.em.find(Item, { taxonomyGroup: { id: 'ingredients' } });
+    this.dataQualityTags = await this.em.find(Tag, { taxonomy: { id: 'data_quality' } });
+    this.ingredientTags = await this.em.find(Tag, { taxonomyGroup: { id: 'ingredients' } });
   }
 
   async importFromFile(update = false) {
@@ -99,7 +100,7 @@ export class ProductService {
 
   async deleteProductChildren() {
     console.log('Deleting product child data');
-    await this.em.nativeDelete(ProductDataQualityTag, {});
+    await this.em.nativeDelete(ProductTag, {});
     await this.em.nativeDelete(ProductIngredient, {});
   }
 
@@ -110,12 +111,13 @@ export class ProductService {
 
     //product.dataQualityTags.removeAll();
     let i = 0;
-    for (const tag of data.data_quality_tags ?? []) {
-      this.em.persist(this.em.create(ProductDataQualityTag, {
+    for (const value of data.data_quality_tags ?? []) {
+      this.em.persist(this.em.create(ProductTag, {
         product: product,
         sequence: i++,
-        tag: tag,
-        item: this.dataQualityTags.find((item) => item.id === tag)
+        value: value,
+        taxonomy: this.em.getReference(Taxonomy, 'data_quality'),
+        tag: this.dataQualityTags.find((tag) => tag.id === value)
       }));
     }
 
@@ -136,7 +138,7 @@ export class ProductService {
         percentMax: offIngredient.percent_max,
         percentEstimate: offIngredient.percent_estimate,
         parent: parent,
-        ingredient: this.ingredientTags.find((item) => item.id === offIngredient.id)
+        ingredient: this.ingredientTags.find((tag) => tag.id === offIngredient.id)
       });
       this.em.persist(ingredient);
       if (offIngredient.ingredients) {
