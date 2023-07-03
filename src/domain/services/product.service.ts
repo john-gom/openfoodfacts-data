@@ -8,19 +8,20 @@ import { ProductTag } from "../entities/product-tag";
 import { Tag } from "../entities/tag";
 import { ProductIngredient } from "../entities/product-ingredient";
 import { Taxonomy } from "../entities/taxonomy";
+import { TAXONOMY_GROUPS } from "./taxonomy.service";
 
 @Injectable()
 export class ProductService {
-  dataQualityTags: Tag[];
-  ingredientTags: Tag[];
+  cachedTags = {};
 
   // Lowish batch size seems to work best, probably due to the size of the product document
   importBatchSize = 20;
   constructor(private em: EntityManager) { }
 
   async cacheTags() {
-    this.dataQualityTags = await this.em.find(Tag, { taxonomy: { id: 'data_quality' } });
-    this.ingredientTags = await this.em.find(Tag, { taxonomyGroup: { id: 'ingredients' } });
+    for (const group of Object.keys(TAXONOMY_GROUPS)) {
+      this.cachedTags[group] = await this.em.find(Tag, { taxonomyGroup: { id: group } });
+    }
   }
 
   async importFromFile(update = false) {
@@ -108,26 +109,35 @@ export class ProductService {
     //product.data = data;
     product.name = data.product_name;
     product.code = data.code;
+    product.ingredientsText = data.ingredients_text;
 
-    //product.dataQualityTags.removeAll();
-    let i = 0;
-    for (const value of data.data_quality_tags ?? []) {
-      this.em.persist(this.em.create(ProductTag, {
-        product: product,
-        sequence: i++,
-        value: value,
-        taxonomy: this.em.getReference(Taxonomy, 'data_quality'),
-        tag: this.dataQualityTags.find((tag) => tag.id === value)
-      }));
-    }
+    this.importTags(data.data_quality_tags, product, 'data_quality', 'data_quality');
+    this.importTags(data.additives_tags, product, 'additives', 'ingredients');
+    this.importTags(data.allergens_hierarchy, product, 'allergens', 'traces');
+    this.importTags(data.states_tags, product, 'states', 'states');
+    this.importTags(data.categories_tags, product, 'categories', 'categories');
+    this.importTags(data.countries_hierarchy, product, 'countries', 'origins');
+    this.importTags(data.misc_tags, product, 'misc', 'misc');
 
-    //product.ingredients.removeAll();
-    this.createIngredients(product, 0, data.ingredients);
+    this.importIngredients(product, 0, data.ingredients);
 
     return product;
   }
 
-  createIngredients(product: Product, sequence: number, ingredients: any[], parent?: ProductIngredient) {
+  private importTags(tagArray: any, product: Product, tagType: string, taxonomyGroup: string) {
+    let i = 0;
+    for (const value of tagArray ?? []) {
+      this.em.persist(this.em.create(ProductTag, {
+        product: product,
+        sequence: i++,
+        value: value,
+        tagType: tagType,
+        tag: this.cachedTags[taxonomyGroup].find((tag) => tag.id === value)
+      }));
+    }
+  }
+
+  importIngredients(product: Product, sequence: number, ingredients: any[], parent?: ProductIngredient) {
     for (const offIngredient of ingredients ?? []) {
       const ingredient = this.em.create(ProductIngredient, {
         product: product,
@@ -138,11 +148,11 @@ export class ProductService {
         percentMax: offIngredient.percent_max,
         percentEstimate: offIngredient.percent_estimate,
         parent: parent,
-        ingredient: this.ingredientTags.find((tag) => tag.id === offIngredient.id)
+        ingredient: this.cachedTags['ingredients'].find((tag) => tag.id === offIngredient.id)
       });
       this.em.persist(ingredient);
       if (offIngredient.ingredients) {
-        sequence = this.createIngredients(product, sequence, offIngredient.ingredients, ingredient);
+        sequence = this.importIngredients(product, sequence, offIngredient.ingredients, ingredient);
       }
     }
     return sequence;

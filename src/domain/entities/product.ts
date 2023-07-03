@@ -17,6 +17,9 @@ export class Product {
   @Property({ index: true })
   code?: string;
 
+  @Property()
+  ingredientsText?: string;
+
   @OneToMany(() => ProductTag, e => e.product)
   dataQualityTags = new Collection<ProductTag>(this);
 

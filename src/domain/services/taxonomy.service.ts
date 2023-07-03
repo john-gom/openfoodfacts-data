@@ -14,7 +14,7 @@ import { TaxonomyGroup } from "../entities/taxonomy-group";
 import { TextTranslation } from "../entities/text-translation";
 import { TextContent } from "../entities/text-content";
 
-const taxonomyGroups = {
+export const TAXONOMY_GROUPS = {
   'traces': ['allergens'],
   'amino_acids': ['amino_acids'],
   'categories': ['categories'],
@@ -77,7 +77,7 @@ export class TaxonomyService {
     });
     this.log("Old data deleted");
 
-    for (const [taxonomyGroup, taxonomies] of Object.entries(taxonomyGroups)) {
+    for (const [taxonomyGroup, taxonomies] of Object.entries(TAXONOMY_GROUPS)) {
       for (const taxonomy of taxonomies) {
         await this.importTaxonomy(taxonomy, taxonomyGroup);
       }

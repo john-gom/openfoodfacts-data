@@ -1,7 +1,6 @@
 import { Entity, ManyToOne, PrimaryKey, Property } from "@mikro-orm/core";
 import { Product } from "./product";
 import { Tag } from "./tag";
-import { Taxonomy } from "./taxonomy";
 
 @Entity()
 export class ProductTag {
@@ -9,10 +8,10 @@ export class ProductTag {
   product: Product;
 
   @PrimaryKey()
-  sequence: number;
+  tagType: string;
 
-  @ManyToOne()
-  taxonomy?: Taxonomy;
+  @PrimaryKey()
+  sequence: number;
 
   @Property()
   value: string;

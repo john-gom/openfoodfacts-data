@@ -69,6 +69,15 @@
           "primary": false,
           "nullable": true,
           "mappedType": "text"
+        },
+        "ingredients_text": {
+          "name": "ingredients_text",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "text"
         }
       },
       "name": "product",
@@ -963,6 +972,15 @@
           "nullable": false,
           "mappedType": "uuid"
         },
+        "tag_type": {
+          "name": "tag_type",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "text"
+        },
         "sequence": {
           "name": "sequence",
           "type": "int",
@@ -971,15 +989,6 @@
           "primary": false,
           "nullable": false,
           "mappedType": "integer"
-        },
-        "taxonomy_id": {
-          "name": "taxonomy_id",
-          "type": "text",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": true,
-          "mappedType": "text"
         },
         "value": {
           "name": "value",
@@ -1016,6 +1025,7 @@
           "keyName": "product_tag_pkey",
           "columnNames": [
             "product_id",
+            "tag_type",
             "sequence"
           ],
           "composite": true,
@@ -1035,19 +1045,6 @@
             "id"
           ],
           "referencedTableName": "off.product",
-          "updateRule": "cascade"
-        },
-        "product_tag_taxonomy_id_foreign": {
-          "constraintName": "product_tag_taxonomy_id_foreign",
-          "columnNames": [
-            "taxonomy_id"
-          ],
-          "localTableName": "off.product_tag",
-          "referencedColumnNames": [
-            "id"
-          ],
-          "referencedTableName": "off.taxonomy",
-          "deleteRule": "set null",
           "updateRule": "cascade"
         },
         "product_tag_tag_taxonomy_group_id_tag_id_foreign": {
