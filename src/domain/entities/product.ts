@@ -20,6 +20,18 @@ export class Product {
   @Property()
   ingredientsText?: string;
 
+  @Property()
+  NutritionAsSoldPer?: string;
+
+  @Property()
+  NutritionPreparedPer?: string;
+
+  @Property()
+  ServingSize?: string;
+
+  @Property({ type: 'double' })
+  ServingQuantity?: number;
+
   @OneToMany(() => ProductTag, e => e.product)
   dataQualityTags = new Collection<ProductTag>(this);
 

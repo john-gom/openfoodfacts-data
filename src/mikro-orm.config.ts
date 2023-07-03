@@ -6,6 +6,7 @@ export default {
   entitiesTs: ['./src/domain/entities'],
   metadataProvider: TsMorphMetadataProvider,
   dbName: 'postgres',
+  //dbName: 'full',
   user: 'postgres',
   password: 'cactus789',
   schema: 'off',

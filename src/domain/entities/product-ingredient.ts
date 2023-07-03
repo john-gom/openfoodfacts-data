@@ -14,7 +14,7 @@ export class ProductIngredient {
   parent?: ProductIngredient;
 
   @Property()
-  text?: string;
+  ingredientText?: string;
 
   @Property()
   id?: string;

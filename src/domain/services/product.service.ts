@@ -9,6 +9,7 @@ import { Tag } from "../entities/tag";
 import { ProductIngredient } from "../entities/product-ingredient";
 import { Taxonomy } from "../entities/taxonomy";
 import { TAXONOMY_GROUPS } from "./taxonomy.service";
+import { ProductNutrient } from "../entities/product-nutrient";
 
 @Injectable()
 export class ProductService {
@@ -103,6 +104,7 @@ export class ProductService {
     console.log('Deleting product child data');
     await this.em.nativeDelete(ProductTag, {});
     await this.em.nativeDelete(ProductIngredient, {});
+    await this.em.nativeDelete(ProductNutrient, {});
   }
 
   fixupProduct(product: Product, data: any): Product {
@@ -110,6 +112,10 @@ export class ProductService {
     product.name = data.product_name;
     product.code = data.code;
     product.ingredientsText = data.ingredients_text;
+    product.NutritionAsSoldPer = data.nutrition_data_per;
+    product.NutritionPreparedPer = data.nutrition_data_prepared_per;
+    product.ServingQuantity = data.serving_quantity;
+    product.ServingSize = data.serving_size;
 
     this.importTags(data.data_quality_tags, product, 'data_quality', 'data_quality');
     this.importTags(data.additives_tags, product, 'additives', 'ingredients');
@@ -120,6 +126,7 @@ export class ProductService {
     this.importTags(data.misc_tags, product, 'misc', 'misc');
 
     this.importIngredients(product, 0, data.ingredients);
+    this.importNutrients(product, data.nutriments);
 
     return product;
   }
@@ -143,7 +150,7 @@ export class ProductService {
         product: product,
         sequence: sequence++,
         id: offIngredient.id,
-        text: offIngredient.text,
+        ingredientText: offIngredient.text,
         percentMin: offIngredient.percent_min,
         percentMax: offIngredient.percent_max,
         percentEstimate: offIngredient.percent_estimate,
@@ -156,5 +163,38 @@ export class ProductService {
       }
     }
     return sequence;
+  }
+
+  importNutrients(product: Product, nurientData: { [key: string]: any }) {
+    const nutrients: { [key: string]: ProductNutrient } = {};
+    for (const [key, value] of Object.entries(nurientData || {})) {
+      const parts = key.split('_');
+      const nutrientId = parts[0];
+      const nutrient = nutrients[nutrientId]
+        ??= new ProductNutrient(product, nutrientId, this.cachedTags['nutrients'].find((tag) => tag.id === 'zz:' + nutrientId));
+      this.em.persist(nutrient);
+
+      const prepared = (parts[1] === 'prepared');
+      const suffix = prepared ? parts[2] : parts[1];
+      if (suffix === 'unit')
+        nutrient.enteredUnit = value;
+      else if (suffix === 'modifier')
+        if (prepared) nutrient.modifierPrepared = value;
+        else nutrient.modifierAsSold = value;
+      else if (suffix === 'label')
+        nutrient.enteredName = value;
+      else if (suffix === 'value')
+        if (prepared) nutrient.enteredQuantityPrepared = value;
+        else nutrient.enteredQuantityAsSold = value;
+      else if (suffix === '100g')
+        if (prepared) nutrient.quantityPer100gPrepared = value;
+        else nutrient.quantityPer100gAsSold = value;
+      else if (suffix === 'serving')
+        if (prepared) nutrient.quantityPerServingPrepared = value;
+        else nutrient.quantityPerServingAsSold = value;
+      else
+        if (prepared) nutrient.normalisedQuantityPrepared = value;
+        else nutrient.normalisedQuantityAsSold = value;
+    }
   }
 }

@@ -78,6 +78,42 @@
           "primary": false,
           "nullable": true,
           "mappedType": "text"
+        },
+        "nutrition_as_sold_per": {
+          "name": "nutrition_as_sold_per",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "text"
+        },
+        "nutrition_prepared_per": {
+          "name": "nutrition_prepared_per",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "text"
+        },
+        "serving_size": {
+          "name": "serving_size",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "text"
+        },
+        "serving_quantity": {
+          "name": "serving_quantity",
+          "type": "double precision",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "double"
         }
       },
       "name": "product",
@@ -1075,6 +1111,198 @@
           "nullable": false,
           "mappedType": "uuid"
         },
+        "nutrient": {
+          "name": "nutrient",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "text"
+        },
+        "entered_name": {
+          "name": "entered_name",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "text"
+        },
+        "entered_unit": {
+          "name": "entered_unit",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "text"
+        },
+        "modifier_as_sold": {
+          "name": "modifier_as_sold",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "text"
+        },
+        "modifier_prepared": {
+          "name": "modifier_prepared",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "text"
+        },
+        "entered_quantity_as_sold": {
+          "name": "entered_quantity_as_sold",
+          "type": "double precision",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "double"
+        },
+        "entered_quantity_prepared": {
+          "name": "entered_quantity_prepared",
+          "type": "double precision",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "double"
+        },
+        "normalised_quantity_as_sold": {
+          "name": "normalised_quantity_as_sold",
+          "type": "double precision",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "double"
+        },
+        "normalised_quantity_prepared": {
+          "name": "normalised_quantity_prepared",
+          "type": "double precision",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "double"
+        },
+        "quantity_per100g_as_sold": {
+          "name": "quantity_per100g_as_sold",
+          "type": "double precision",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "double"
+        },
+        "quantity_per100g_prepared": {
+          "name": "quantity_per100g_prepared",
+          "type": "double precision",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "double"
+        },
+        "quantity_per_serving_as_sold": {
+          "name": "quantity_per_serving_as_sold",
+          "type": "double precision",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "double"
+        },
+        "quantity_per_serving_prepared": {
+          "name": "quantity_per_serving_prepared",
+          "type": "double precision",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "double"
+        },
+        "tag_taxonomy_group_id": {
+          "name": "tag_taxonomy_group_id",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "text"
+        },
+        "tag_id": {
+          "name": "tag_id",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "text"
+        }
+      },
+      "name": "product_nutrient",
+      "schema": "off",
+      "indexes": [
+        {
+          "keyName": "product_nutrient_pkey",
+          "columnNames": [
+            "product_id",
+            "nutrient"
+          ],
+          "composite": true,
+          "primary": true,
+          "unique": true
+        }
+      ],
+      "checks": [],
+      "foreignKeys": {
+        "product_nutrient_product_id_foreign": {
+          "constraintName": "product_nutrient_product_id_foreign",
+          "columnNames": [
+            "product_id"
+          ],
+          "localTableName": "off.product_nutrient",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "off.product",
+          "updateRule": "cascade"
+        },
+        "product_nutrient_tag_taxonomy_group_id_tag_id_foreign": {
+          "constraintName": "product_nutrient_tag_taxonomy_group_id_tag_id_foreign",
+          "columnNames": [
+            "tag_taxonomy_group_id",
+            "tag_id"
+          ],
+          "localTableName": "off.product_nutrient",
+          "referencedColumnNames": [
+            "taxonomy_group_id",
+            "id"
+          ],
+          "referencedTableName": "off.tag",
+          "deleteRule": "set null",
+          "updateRule": "cascade"
+        }
+      }
+    },
+    {
+      "columns": {
+        "product_id": {
+          "name": "product_id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "uuid"
+        },
         "sequence": {
           "name": "sequence",
           "type": "int",
@@ -1102,8 +1330,8 @@
           "nullable": true,
           "mappedType": "integer"
         },
-        "text": {
-          "name": "text",
+        "ingredient_text": {
+          "name": "ingredient_text",
           "type": "text",
           "unsigned": false,
           "autoincrement": false,
