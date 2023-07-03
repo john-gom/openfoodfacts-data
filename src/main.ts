@@ -12,25 +12,13 @@ async function bootstrap() {
         watchPg: true,
         graphiql: true,
         enhanceGraphiql: true,
+        allowExplain: true,
         simpleCollections: 'only',
+        disableDefaultMutations: true,
         appendPlugins: [require("@graphile-contrib/pg-simplify-inflector")],
         graphileBuildOptions: {
           pgOmitListSuffix: true,
-          /*
-           * Uncomment if you want 'userPatch' instead of 'patch' in update
-           * mutations.
-           */
-          //pgSimplifyPatch: false,
-          /*
-           * Uncomment if you want 'allUsers' instead of 'users' at root level.
-           */
-          //pgSimplifyAllRows: false,
-          /*
-           * Uncomment if you want primary key queries and mutations to have
-           * `ById` (or similar) suffix; and the `nodeId` queries/mutations
-           * to lose their `ByNodeId` suffix.
-           */
-          // pgShortPk: true,
+          pgSimplifyAllRows: true,
         },
       }
     )
