@@ -1,8 +1,9 @@
-import { Entity, ManyToOne, PrimaryKey, Property } from "@mikro-orm/core";
+import { Entity, Index, ManyToOne, PrimaryKey, Property } from "@mikro-orm/core";
 import { Product } from "./product";
 import { Tag } from "./tag";
 
 @Entity()
+@Index({ properties: ['tagType', 'value', 'product'] })
 export class ProductTag {
   @ManyToOne({ primary: true })
   product: Product;

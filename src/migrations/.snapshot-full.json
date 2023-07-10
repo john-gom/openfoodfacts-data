@@ -1,0 +1,1765 @@
+{
+  "namespaces": [
+    "off"
+  ],
+  "name": "off",
+  "tables": [
+    {
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "text"
+        }
+      },
+      "name": "language",
+      "schema": "off",
+      "indexes": [
+        {
+          "keyName": "language_pkey",
+          "columnNames": [
+            "id"
+          ],
+          "composite": false,
+          "primary": true,
+          "unique": true
+        }
+      ],
+      "checks": [],
+      "foreignKeys": {}
+    },
+    {
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "uuid"
+        },
+        "data": {
+          "name": "data",
+          "type": "jsonb",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "json"
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "text"
+        },
+        "search": {
+          "name": "search",
+          "type": "tsvector",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "unknown"
+        },
+        "code": {
+          "name": "code",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "text"
+        },
+        "ingredients_text": {
+          "name": "ingredients_text",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "text"
+        },
+        "nutrition_as_sold_per": {
+          "name": "nutrition_as_sold_per",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "text"
+        },
+        "nutrition_prepared_per": {
+          "name": "nutrition_prepared_per",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "text"
+        },
+        "serving_size": {
+          "name": "serving_size",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "text"
+        },
+        "serving_quantity": {
+          "name": "serving_quantity",
+          "type": "double precision",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "double"
+        }
+      },
+      "name": "product",
+      "schema": "off",
+      "indexes": [
+        {
+          "columnNames": [
+            "code"
+          ],
+          "composite": false,
+          "keyName": "product_code_index",
+          "primary": false,
+          "unique": false
+        },
+        {
+          "keyName": "product_search_index",
+          "columnNames": [
+            "search"
+          ],
+          "composite": false,
+          "primary": false,
+          "unique": false,
+          "type": "fulltext"
+        },
+        {
+          "keyName": "product_pkey",
+          "columnNames": [
+            "id"
+          ],
+          "composite": false,
+          "primary": true,
+          "unique": true
+        }
+      ],
+      "checks": [],
+      "foreignKeys": {}
+    },
+    {
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "text"
+        }
+      },
+      "name": "taxonomy_group",
+      "schema": "off",
+      "indexes": [
+        {
+          "keyName": "taxonomy_group_pkey",
+          "columnNames": [
+            "id"
+          ],
+          "composite": false,
+          "primary": true,
+          "unique": true
+        }
+      ],
+      "checks": [],
+      "foreignKeys": {}
+    },
+    {
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "text"
+        },
+        "group_id": {
+          "name": "group_id",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "text"
+        }
+      },
+      "name": "taxonomy",
+      "schema": "off",
+      "indexes": [
+        {
+          "keyName": "taxonomy_pkey",
+          "columnNames": [
+            "id"
+          ],
+          "composite": false,
+          "primary": true,
+          "unique": true
+        }
+      ],
+      "checks": [],
+      "foreignKeys": {
+        "taxonomy_group_id_foreign": {
+          "constraintName": "taxonomy_group_id_foreign",
+          "columnNames": [
+            "group_id"
+          ],
+          "localTableName": "off.taxonomy",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "off.taxonomy_group",
+          "updateRule": "cascade"
+        }
+      }
+    },
+    {
+      "columns": {
+        "taxonomy_id": {
+          "name": "taxonomy_id",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "text"
+        },
+        "original_line": {
+          "name": "original_line",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "integer"
+        },
+        "original_position": {
+          "name": "original_position",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "integer"
+        },
+        "value": {
+          "name": "value",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "text"
+        }
+      },
+      "name": "taxonomy_comment",
+      "schema": "off",
+      "indexes": [
+        {
+          "keyName": "taxonomy_comment_pkey",
+          "columnNames": [
+            "taxonomy_id",
+            "original_line"
+          ],
+          "composite": true,
+          "primary": true,
+          "unique": true
+        }
+      ],
+      "checks": [],
+      "foreignKeys": {
+        "taxonomy_comment_taxonomy_id_foreign": {
+          "constraintName": "taxonomy_comment_taxonomy_id_foreign",
+          "columnNames": [
+            "taxonomy_id"
+          ],
+          "localTableName": "off.taxonomy_comment",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "off.taxonomy",
+          "updateRule": "cascade"
+        }
+      }
+    },
+    {
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "uuid"
+        },
+        "original_line": {
+          "name": "original_line",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "integer"
+        },
+        "original_position": {
+          "name": "original_position",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "integer"
+        },
+        "taxonomy_group_id": {
+          "name": "taxonomy_group_id",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "text"
+        },
+        "language_id": {
+          "name": "language_id",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "text"
+        },
+        "stop_word": {
+          "name": "stop_word",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "text"
+        }
+      },
+      "name": "taxonomy_stopword",
+      "schema": "off",
+      "indexes": [
+        {
+          "keyName": "taxonomy_stopword_taxonomy_group_id_language_id_stop_word_unique",
+          "columnNames": [
+            "taxonomy_group_id",
+            "language_id",
+            "stop_word"
+          ],
+          "composite": true,
+          "primary": false,
+          "unique": true
+        },
+        {
+          "keyName": "taxonomy_stopword_pkey",
+          "columnNames": [
+            "id"
+          ],
+          "composite": false,
+          "primary": true,
+          "unique": true
+        }
+      ],
+      "checks": [],
+      "foreignKeys": {
+        "taxonomy_stopword_taxonomy_group_id_foreign": {
+          "constraintName": "taxonomy_stopword_taxonomy_group_id_foreign",
+          "columnNames": [
+            "taxonomy_group_id"
+          ],
+          "localTableName": "off.taxonomy_stopword",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "off.taxonomy_group",
+          "updateRule": "cascade"
+        },
+        "taxonomy_stopword_language_id_foreign": {
+          "constraintName": "taxonomy_stopword_language_id_foreign",
+          "columnNames": [
+            "language_id"
+          ],
+          "localTableName": "off.taxonomy_stopword",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "off.language",
+          "updateRule": "cascade"
+        }
+      }
+    },
+    {
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "uuid"
+        },
+        "taxonomy_group_id": {
+          "name": "taxonomy_group_id",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "text"
+        },
+        "language_id": {
+          "name": "language_id",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "text"
+        },
+        "root_word": {
+          "name": "root_word",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "text"
+        }
+      },
+      "name": "taxonomy_synonym_root",
+      "schema": "off",
+      "indexes": [
+        {
+          "keyName": "taxonomy_synonym_root_taxonomy_group_id_language_i_b2ae4_unique",
+          "columnNames": [
+            "taxonomy_group_id",
+            "language_id",
+            "root_word"
+          ],
+          "composite": true,
+          "primary": false,
+          "unique": true
+        },
+        {
+          "keyName": "taxonomy_synonym_root_pkey",
+          "columnNames": [
+            "id"
+          ],
+          "composite": false,
+          "primary": true,
+          "unique": true
+        }
+      ],
+      "checks": [],
+      "foreignKeys": {
+        "taxonomy_synonym_root_taxonomy_group_id_foreign": {
+          "constraintName": "taxonomy_synonym_root_taxonomy_group_id_foreign",
+          "columnNames": [
+            "taxonomy_group_id"
+          ],
+          "localTableName": "off.taxonomy_synonym_root",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "off.taxonomy_group",
+          "updateRule": "cascade"
+        },
+        "taxonomy_synonym_root_language_id_foreign": {
+          "constraintName": "taxonomy_synonym_root_language_id_foreign",
+          "columnNames": [
+            "language_id"
+          ],
+          "localTableName": "off.taxonomy_synonym_root",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "off.language",
+          "updateRule": "cascade"
+        }
+      }
+    },
+    {
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "uuid"
+        },
+        "original_line": {
+          "name": "original_line",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "integer"
+        },
+        "original_position": {
+          "name": "original_position",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "integer"
+        },
+        "taxonomy_group_id": {
+          "name": "taxonomy_group_id",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "text"
+        },
+        "language_id": {
+          "name": "language_id",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "text"
+        },
+        "synonym": {
+          "name": "synonym",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "text"
+        },
+        "root_word_id": {
+          "name": "root_word_id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "uuid"
+        }
+      },
+      "name": "taxonomy_synonym",
+      "schema": "off",
+      "indexes": [
+        {
+          "keyName": "taxonomy_synonym_taxonomy_group_id_language_id_synonym_unique",
+          "columnNames": [
+            "taxonomy_group_id",
+            "language_id",
+            "synonym"
+          ],
+          "composite": true,
+          "primary": false,
+          "unique": true
+        },
+        {
+          "keyName": "taxonomy_synonym_pkey",
+          "columnNames": [
+            "id"
+          ],
+          "composite": false,
+          "primary": true,
+          "unique": true
+        }
+      ],
+      "checks": [],
+      "foreignKeys": {
+        "taxonomy_synonym_taxonomy_group_id_foreign": {
+          "constraintName": "taxonomy_synonym_taxonomy_group_id_foreign",
+          "columnNames": [
+            "taxonomy_group_id"
+          ],
+          "localTableName": "off.taxonomy_synonym",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "off.taxonomy_group",
+          "updateRule": "cascade"
+        },
+        "taxonomy_synonym_language_id_foreign": {
+          "constraintName": "taxonomy_synonym_language_id_foreign",
+          "columnNames": [
+            "language_id"
+          ],
+          "localTableName": "off.taxonomy_synonym",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "off.language",
+          "updateRule": "cascade"
+        },
+        "taxonomy_synonym_root_word_id_foreign": {
+          "constraintName": "taxonomy_synonym_root_word_id_foreign",
+          "columnNames": [
+            "root_word_id"
+          ],
+          "localTableName": "off.taxonomy_synonym",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "off.taxonomy_synonym_root",
+          "updateRule": "cascade"
+        }
+      }
+    },
+    {
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "uuid"
+        },
+        "original_line": {
+          "name": "original_line",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "integer"
+        },
+        "original_position": {
+          "name": "original_position",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "integer"
+        },
+        "subject": {
+          "name": "subject",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "text"
+        },
+        "original_language_id": {
+          "name": "original_language_id",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "text"
+        },
+        "original_text": {
+          "name": "original_text",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "text"
+        }
+      },
+      "name": "text_content",
+      "schema": "off",
+      "indexes": [
+        {
+          "keyName": "text_content_pkey",
+          "columnNames": [
+            "id"
+          ],
+          "composite": false,
+          "primary": true,
+          "unique": true
+        }
+      ],
+      "checks": [],
+      "foreignKeys": {
+        "text_content_original_language_id_foreign": {
+          "constraintName": "text_content_original_language_id_foreign",
+          "columnNames": [
+            "original_language_id"
+          ],
+          "localTableName": "off.text_content",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "off.language",
+          "updateRule": "cascade"
+        }
+      }
+    },
+    {
+      "columns": {
+        "taxonomy_group_id": {
+          "name": "taxonomy_group_id",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "text"
+        },
+        "id": {
+          "name": "id",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "text"
+        },
+        "taxonomy_id": {
+          "name": "taxonomy_id",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "text"
+        },
+        "name_id": {
+          "name": "name_id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "uuid"
+        },
+        "description_id": {
+          "name": "description_id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "uuid"
+        }
+      },
+      "name": "tag",
+      "schema": "off",
+      "indexes": [
+        {
+          "keyName": "tag_pkey",
+          "columnNames": [
+            "taxonomy_group_id",
+            "id"
+          ],
+          "composite": true,
+          "primary": true,
+          "unique": true
+        }
+      ],
+      "checks": [],
+      "foreignKeys": {
+        "tag_taxonomy_group_id_foreign": {
+          "constraintName": "tag_taxonomy_group_id_foreign",
+          "columnNames": [
+            "taxonomy_group_id"
+          ],
+          "localTableName": "off.tag",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "off.taxonomy_group",
+          "updateRule": "cascade"
+        },
+        "tag_taxonomy_id_foreign": {
+          "constraintName": "tag_taxonomy_id_foreign",
+          "columnNames": [
+            "taxonomy_id"
+          ],
+          "localTableName": "off.tag",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "off.taxonomy",
+          "updateRule": "cascade"
+        },
+        "tag_name_id_foreign": {
+          "constraintName": "tag_name_id_foreign",
+          "columnNames": [
+            "name_id"
+          ],
+          "localTableName": "off.tag",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "off.text_content",
+          "updateRule": "cascade"
+        },
+        "tag_description_id_foreign": {
+          "constraintName": "tag_description_id_foreign",
+          "columnNames": [
+            "description_id"
+          ],
+          "localTableName": "off.tag",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "off.text_content",
+          "deleteRule": "set null",
+          "updateRule": "cascade"
+        }
+      }
+    },
+    {
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "uuid"
+        },
+        "original_line": {
+          "name": "original_line",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "integer"
+        },
+        "original_position": {
+          "name": "original_position",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "integer"
+        },
+        "taxonomy_group_id": {
+          "name": "taxonomy_group_id",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "text"
+        },
+        "language_id": {
+          "name": "language_id",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "text"
+        },
+        "tag_taxonomy_group_id": {
+          "name": "tag_taxonomy_group_id",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "text"
+        },
+        "tag_id": {
+          "name": "tag_id",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "text"
+        },
+        "synonym": {
+          "name": "synonym",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "text"
+        }
+      },
+      "name": "tag_synonym",
+      "schema": "off",
+      "indexes": [
+        {
+          "keyName": "tag_synonym_taxonomy_group_id_language_id_synonym_unique",
+          "columnNames": [
+            "taxonomy_group_id",
+            "language_id",
+            "synonym"
+          ],
+          "composite": true,
+          "primary": false,
+          "unique": true
+        },
+        {
+          "keyName": "tag_synonym_pkey",
+          "columnNames": [
+            "id"
+          ],
+          "composite": false,
+          "primary": true,
+          "unique": true
+        }
+      ],
+      "checks": [],
+      "foreignKeys": {
+        "tag_synonym_taxonomy_group_id_foreign": {
+          "constraintName": "tag_synonym_taxonomy_group_id_foreign",
+          "columnNames": [
+            "taxonomy_group_id"
+          ],
+          "localTableName": "off.tag_synonym",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "off.taxonomy_group",
+          "updateRule": "cascade"
+        },
+        "tag_synonym_language_id_foreign": {
+          "constraintName": "tag_synonym_language_id_foreign",
+          "columnNames": [
+            "language_id"
+          ],
+          "localTableName": "off.tag_synonym",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "off.language",
+          "updateRule": "cascade"
+        },
+        "tag_synonym_tag_taxonomy_group_id_tag_id_foreign": {
+          "constraintName": "tag_synonym_tag_taxonomy_group_id_tag_id_foreign",
+          "columnNames": [
+            "tag_taxonomy_group_id",
+            "tag_id"
+          ],
+          "localTableName": "off.tag_synonym",
+          "referencedColumnNames": [
+            "taxonomy_group_id",
+            "id"
+          ],
+          "referencedTableName": "off.tag",
+          "updateRule": "cascade"
+        }
+      }
+    },
+    {
+      "columns": {
+        "tag_taxonomy_group_id": {
+          "name": "tag_taxonomy_group_id",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "text"
+        },
+        "tag_id": {
+          "name": "tag_id",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "text"
+        },
+        "property_id": {
+          "name": "property_id",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "text"
+        },
+        "original_line": {
+          "name": "original_line",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "integer"
+        },
+        "original_position": {
+          "name": "original_position",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "integer"
+        },
+        "value": {
+          "name": "value",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "text"
+        }
+      },
+      "name": "tag_property",
+      "schema": "off",
+      "indexes": [
+        {
+          "keyName": "tag_property_pkey",
+          "columnNames": [
+            "tag_taxonomy_group_id",
+            "tag_id",
+            "property_id"
+          ],
+          "composite": true,
+          "primary": true,
+          "unique": true
+        }
+      ],
+      "checks": [],
+      "foreignKeys": {
+        "tag_property_tag_taxonomy_group_id_tag_id_foreign": {
+          "constraintName": "tag_property_tag_taxonomy_group_id_tag_id_foreign",
+          "columnNames": [
+            "tag_taxonomy_group_id",
+            "tag_id"
+          ],
+          "localTableName": "off.tag_property",
+          "referencedColumnNames": [
+            "taxonomy_group_id",
+            "id"
+          ],
+          "referencedTableName": "off.tag",
+          "updateRule": "cascade"
+        }
+      }
+    },
+    {
+      "columns": {
+        "tag_taxonomy_group_id": {
+          "name": "tag_taxonomy_group_id",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "text"
+        },
+        "tag_id": {
+          "name": "tag_id",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "text"
+        },
+        "parent_value": {
+          "name": "parent_value",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "text"
+        },
+        "original_line": {
+          "name": "original_line",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "integer"
+        },
+        "original_position": {
+          "name": "original_position",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "integer"
+        },
+        "parent_taxonomy_group_id": {
+          "name": "parent_taxonomy_group_id",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "text"
+        },
+        "parent_id": {
+          "name": "parent_id",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "text"
+        }
+      },
+      "name": "tag_parent",
+      "schema": "off",
+      "indexes": [
+        {
+          "keyName": "tag_parent_parent_taxonomy_group_id_parent_id_index",
+          "columnNames": [
+            "parent_taxonomy_group_id",
+            "parent_id"
+          ],
+          "composite": true,
+          "primary": false,
+          "unique": false
+        },
+        {
+          "keyName": "tag_parent_pkey",
+          "columnNames": [
+            "tag_taxonomy_group_id",
+            "tag_id",
+            "parent_value"
+          ],
+          "composite": true,
+          "primary": true,
+          "unique": true
+        }
+      ],
+      "checks": [],
+      "foreignKeys": {
+        "tag_parent_tag_taxonomy_group_id_tag_id_foreign": {
+          "constraintName": "tag_parent_tag_taxonomy_group_id_tag_id_foreign",
+          "columnNames": [
+            "tag_taxonomy_group_id",
+            "tag_id"
+          ],
+          "localTableName": "off.tag_parent",
+          "referencedColumnNames": [
+            "taxonomy_group_id",
+            "id"
+          ],
+          "referencedTableName": "off.tag",
+          "updateRule": "cascade"
+        },
+        "tag_parent_parent_taxonomy_group_id_parent_id_foreign": {
+          "constraintName": "tag_parent_parent_taxonomy_group_id_parent_id_foreign",
+          "columnNames": [
+            "parent_taxonomy_group_id",
+            "parent_id"
+          ],
+          "localTableName": "off.tag_parent",
+          "referencedColumnNames": [
+            "taxonomy_group_id",
+            "id"
+          ],
+          "referencedTableName": "off.tag",
+          "deleteRule": "set null",
+          "updateRule": "cascade"
+        }
+      }
+    },
+    {
+      "columns": {
+        "product_id": {
+          "name": "product_id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "uuid"
+        },
+        "tag_type": {
+          "name": "tag_type",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "text"
+        },
+        "sequence": {
+          "name": "sequence",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "integer"
+        },
+        "value": {
+          "name": "value",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "text"
+        },
+        "tag_taxonomy_group_id": {
+          "name": "tag_taxonomy_group_id",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "text"
+        },
+        "tag_id": {
+          "name": "tag_id",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "text"
+        }
+      },
+      "name": "product_tag",
+      "schema": "off",
+      "indexes": [
+        {
+          "keyName": "product_tag_tag_type_value_product_id_index",
+          "columnNames": [
+            "tag_type",
+            "value",
+            "product_id"
+          ],
+          "composite": true,
+          "primary": false,
+          "unique": false
+        },
+        {
+          "keyName": "product_tag_pkey",
+          "columnNames": [
+            "product_id",
+            "tag_type",
+            "sequence"
+          ],
+          "composite": true,
+          "primary": true,
+          "unique": true
+        }
+      ],
+      "checks": [],
+      "foreignKeys": {
+        "product_tag_product_id_foreign": {
+          "constraintName": "product_tag_product_id_foreign",
+          "columnNames": [
+            "product_id"
+          ],
+          "localTableName": "off.product_tag",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "off.product",
+          "updateRule": "cascade"
+        },
+        "product_tag_tag_taxonomy_group_id_tag_id_foreign": {
+          "constraintName": "product_tag_tag_taxonomy_group_id_tag_id_foreign",
+          "columnNames": [
+            "tag_taxonomy_group_id",
+            "tag_id"
+          ],
+          "localTableName": "off.product_tag",
+          "referencedColumnNames": [
+            "taxonomy_group_id",
+            "id"
+          ],
+          "referencedTableName": "off.tag",
+          "deleteRule": "set null",
+          "updateRule": "cascade"
+        }
+      }
+    },
+    {
+      "columns": {
+        "product_id": {
+          "name": "product_id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "uuid"
+        },
+        "nutrient": {
+          "name": "nutrient",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "text"
+        },
+        "entered_name": {
+          "name": "entered_name",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "text"
+        },
+        "entered_unit": {
+          "name": "entered_unit",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "text"
+        },
+        "modifier_as_sold": {
+          "name": "modifier_as_sold",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "text"
+        },
+        "modifier_prepared": {
+          "name": "modifier_prepared",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "text"
+        },
+        "entered_quantity_as_sold": {
+          "name": "entered_quantity_as_sold",
+          "type": "double precision",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "double"
+        },
+        "entered_quantity_prepared": {
+          "name": "entered_quantity_prepared",
+          "type": "double precision",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "double"
+        },
+        "normalised_quantity_as_sold": {
+          "name": "normalised_quantity_as_sold",
+          "type": "double precision",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "double"
+        },
+        "normalised_quantity_prepared": {
+          "name": "normalised_quantity_prepared",
+          "type": "double precision",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "double"
+        },
+        "quantity_per100g_as_sold": {
+          "name": "quantity_per100g_as_sold",
+          "type": "double precision",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "double"
+        },
+        "quantity_per100g_prepared": {
+          "name": "quantity_per100g_prepared",
+          "type": "double precision",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "double"
+        },
+        "quantity_per_serving_as_sold": {
+          "name": "quantity_per_serving_as_sold",
+          "type": "double precision",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "double"
+        },
+        "quantity_per_serving_prepared": {
+          "name": "quantity_per_serving_prepared",
+          "type": "double precision",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "double"
+        },
+        "tag_taxonomy_group_id": {
+          "name": "tag_taxonomy_group_id",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "text"
+        },
+        "tag_id": {
+          "name": "tag_id",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "text"
+        }
+      },
+      "name": "product_nutrient",
+      "schema": "off",
+      "indexes": [
+        {
+          "keyName": "product_nutrient_pkey",
+          "columnNames": [
+            "product_id",
+            "nutrient"
+          ],
+          "composite": true,
+          "primary": true,
+          "unique": true
+        }
+      ],
+      "checks": [],
+      "foreignKeys": {
+        "product_nutrient_product_id_foreign": {
+          "constraintName": "product_nutrient_product_id_foreign",
+          "columnNames": [
+            "product_id"
+          ],
+          "localTableName": "off.product_nutrient",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "off.product",
+          "updateRule": "cascade"
+        },
+        "product_nutrient_tag_taxonomy_group_id_tag_id_foreign": {
+          "constraintName": "product_nutrient_tag_taxonomy_group_id_tag_id_foreign",
+          "columnNames": [
+            "tag_taxonomy_group_id",
+            "tag_id"
+          ],
+          "localTableName": "off.product_nutrient",
+          "referencedColumnNames": [
+            "taxonomy_group_id",
+            "id"
+          ],
+          "referencedTableName": "off.tag",
+          "deleteRule": "set null",
+          "updateRule": "cascade"
+        }
+      }
+    },
+    {
+      "columns": {
+        "product_id": {
+          "name": "product_id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "uuid"
+        },
+        "sequence": {
+          "name": "sequence",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "integer"
+        },
+        "parent_product_id": {
+          "name": "parent_product_id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "uuid"
+        },
+        "parent_sequence": {
+          "name": "parent_sequence",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "integer"
+        },
+        "ingredient_text": {
+          "name": "ingredient_text",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "text"
+        },
+        "id": {
+          "name": "id",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "text"
+        },
+        "percent_min": {
+          "name": "percent_min",
+          "type": "double precision",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "double"
+        },
+        "percent_max": {
+          "name": "percent_max",
+          "type": "double precision",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "double"
+        },
+        "percent_estimate": {
+          "name": "percent_estimate",
+          "type": "double precision",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "double"
+        },
+        "ingredient_taxonomy_group_id": {
+          "name": "ingredient_taxonomy_group_id",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "text"
+        },
+        "ingredient_id": {
+          "name": "ingredient_id",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "text"
+        }
+      },
+      "name": "product_ingredient",
+      "schema": "off",
+      "indexes": [
+        {
+          "keyName": "product_ingredient_parent_product_id_parent_sequence_index",
+          "columnNames": [
+            "parent_product_id",
+            "parent_sequence"
+          ],
+          "composite": true,
+          "primary": false,
+          "unique": false
+        },
+        {
+          "keyName": "product_ingredient_pkey",
+          "columnNames": [
+            "product_id",
+            "sequence"
+          ],
+          "composite": true,
+          "primary": true,
+          "unique": true
+        }
+      ],
+      "checks": [],
+      "foreignKeys": {
+        "product_ingredient_product_id_foreign": {
+          "constraintName": "product_ingredient_product_id_foreign",
+          "columnNames": [
+            "product_id"
+          ],
+          "localTableName": "off.product_ingredient",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "off.product",
+          "updateRule": "cascade"
+        },
+        "product_ingredient_parent_product_id_parent_sequence_foreign": {
+          "constraintName": "product_ingredient_parent_product_id_parent_sequence_foreign",
+          "columnNames": [
+            "parent_product_id",
+            "parent_sequence"
+          ],
+          "localTableName": "off.product_ingredient",
+          "referencedColumnNames": [
+            "product_id",
+            "sequence"
+          ],
+          "referencedTableName": "off.product_ingredient",
+          "deleteRule": "set null",
+          "updateRule": "cascade"
+        },
+        "product_ingredient_ingredient_taxonomy_group_id_i_21439_foreign": {
+          "constraintName": "product_ingredient_ingredient_taxonomy_group_id_i_21439_foreign",
+          "columnNames": [
+            "ingredient_taxonomy_group_id",
+            "ingredient_id"
+          ],
+          "localTableName": "off.product_ingredient",
+          "referencedColumnNames": [
+            "taxonomy_group_id",
+            "id"
+          ],
+          "referencedTableName": "off.tag",
+          "deleteRule": "set null",
+          "updateRule": "cascade"
+        }
+      }
+    },
+    {
+      "columns": {
+        "text_content_id": {
+          "name": "text_content_id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "uuid"
+        },
+        "language_id": {
+          "name": "language_id",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "text"
+        },
+        "original_line": {
+          "name": "original_line",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "integer"
+        },
+        "original_position": {
+          "name": "original_position",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "integer"
+        },
+        "translated_text": {
+          "name": "translated_text",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "text"
+        }
+      },
+      "name": "text_translation",
+      "schema": "off",
+      "indexes": [
+        {
+          "keyName": "text_translation_pkey",
+          "columnNames": [
+            "text_content_id",
+            "language_id"
+          ],
+          "composite": true,
+          "primary": true,
+          "unique": true
+        }
+      ],
+      "checks": [],
+      "foreignKeys": {
+        "text_translation_text_content_id_foreign": {
+          "constraintName": "text_translation_text_content_id_foreign",
+          "columnNames": [
+            "text_content_id"
+          ],
+          "localTableName": "off.text_translation",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "off.text_content",
+          "updateRule": "cascade"
+        },
+        "text_translation_language_id_foreign": {
+          "constraintName": "text_translation_language_id_foreign",
+          "columnNames": [
+            "language_id"
+          ],
+          "localTableName": "off.text_translation",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "off.language",
+          "updateRule": "cascade"
+        }
+      }
+    }
+  ]
+}

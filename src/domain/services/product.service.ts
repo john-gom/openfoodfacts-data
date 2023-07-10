@@ -16,7 +16,8 @@ export class ProductService {
   cachedTags = {};
 
   // Lowish batch size seems to work best, probably due to the size of the product document
-  importBatchSize = 20;
+  importBatchSize = 1;
+  importLogInterval = 1000;
   constructor(private em: EntityManager) { }
 
   async cacheTags() {
@@ -39,10 +40,12 @@ export class ProductService {
         i++;
         const data = JSON.parse(line.replace(/\\u0000/g, ''));
 
-        this.em.persist(this.fixupProduct(await this.findOrNewProduct(update, data), data));
+        this.em.persist(await this.fixupProduct(update, data));
         if (!(i % this.importBatchSize)) {
           await this.em.flush();
           this.em.clear();
+        }
+        if (!(i % this.importLogInterval)) {
           console.log((new Date().getTime() - start) + ': ' + i);
         }
       } catch (e) {
@@ -72,17 +75,30 @@ export class ProductService {
     await client.connect();
     const db = client.db('off');
     const products = db.collection('products');
-    const cursor = products.find();
+    const cursor = products.find(/*{}, {
+      projection: {
+        code: 1,
+        data_quality_tags: 1,
+        additives_tags: 1,
+        allergens_hierarchy: 1,
+        states_tags: 1,
+        categories_tags: 1,
+        countries_hierarchy: 1,
+        misc_tags: 1
+      }
+    }*/);
     let i = 0;
     console.log((new Date().getTime() - start) + ': Starting import');
     while (true) {
       const data = await cursor.next();
       if (!data) break;
 
-      this.em.persist(this.fixupProduct(await this.findOrNewProduct(update, data), data));
+      this.em.persist(await this.fixupProduct(update, data));
       if (!(++i % this.importBatchSize)) {
         await this.em.flush();
         this.em.clear();
+      }
+      if (!(i % this.importLogInterval)) {
         console.log((new Date().getTime() - start) + ': ' + i);
       }
     }
@@ -93,15 +109,15 @@ export class ProductService {
   }
 
   async deleteProducts(update) {
-    await this.deleteProductChildren();
     if (!update) {
+      await this.deleteProductChildren();
       await this.deleteAndFlush(Product);
     }
   }
 
   async deleteProductChildren() {
-    //await this.deleteAndFlush(ProductTag);
-    //await this.deleteAndFlush(ProductIngredient);
+    await this.deleteAndFlush(ProductTag);
+    await this.deleteAndFlush(ProductIngredient);
     await this.deleteAndFlush(ProductNutrient);
   }
 
@@ -111,8 +127,10 @@ export class ProductService {
     await this.em.flush();
   }
 
-  fixupProduct(product: Product, data: any): Product {
+  async fixupProduct(update: boolean, data: any): Promise<Product> {
+    const product = await this.findOrNewProduct(update, data);
     //product.data = data;
+    /*
     product.name = data.product_name;
     product.code = data.code;
     product.ingredientsText = data.ingredients_text;
@@ -120,8 +138,8 @@ export class ProductService {
     product.NutritionPreparedPer = data.nutrition_data_prepared_per;
     product.ServingQuantity = data.serving_quantity;
     product.ServingSize = data.serving_size;
-
-    /*
+*/
+    await this.em.nativeDelete(ProductTag, { product: product });
     this.importTags(data.data_quality_tags, product, 'data_quality', 'data_quality');
     this.importTags(data.additives_tags, product, 'additives', 'ingredients');
     this.importTags(data.allergens_hierarchy, product, 'allergens', 'traces');
@@ -129,11 +147,13 @@ export class ProductService {
     this.importTags(data.categories_tags, product, 'categories', 'categories');
     this.importTags(data.countries_hierarchy, product, 'countries', 'origins');
     this.importTags(data.misc_tags, product, 'misc', 'misc');
-
-    this.importIngredients(product, 0, data.ingredients);
+    /*
+        await this.em.nativeDelete(ProductIngredient, { product: product });
+        this.importIngredients(product, 0, data.ingredients);
+    
+        await this.em.nativeDelete(ProductNutrient, { product: product });
+        this.importNutrients(product, data.nutriments);
     */
-    this.importNutrients(product, data.nutriments);
-
     return product;
   }
 
