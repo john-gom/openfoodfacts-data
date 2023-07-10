@@ -5,6 +5,7 @@ import { TaxonomyGroup } from './taxonomy-group';
 import { Tag } from './tag';
 import { TaxonomyEntity } from './taxonomy-entity';
 
+// TODO: Maybe change this to tag_name as "synonym" is a bit of an obscure word
 @Entity()
 @Unique({ properties: ['taxonomyGroup', 'language', 'synonym'] })
 export class TagSynonym extends TaxonomyEntity {
@@ -28,6 +29,8 @@ export class TagSynonym extends TaxonomyEntity {
     this.tag = tag;
     this.taxonomyGroup = tag.taxonomy.group;
     this.language = language;
+    // TODO: Maybe store originally entered synonym so can re-process 
+    // if global stopwords or synonyms are changed
     this.synonym = this.normalizeId(synonym);
   }
 

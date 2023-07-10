@@ -100,8 +100,8 @@ export class ProductService {
   }
 
   async deleteProductChildren() {
-    await this.deleteAndFlush(ProductTag);
-    await this.deleteAndFlush(ProductIngredient);
+    //await this.deleteAndFlush(ProductTag);
+    //await this.deleteAndFlush(ProductIngredient);
     await this.deleteAndFlush(ProductNutrient);
   }
 
@@ -121,6 +121,7 @@ export class ProductService {
     product.ServingQuantity = data.serving_quantity;
     product.ServingSize = data.serving_size;
 
+    /*
     this.importTags(data.data_quality_tags, product, 'data_quality', 'data_quality');
     this.importTags(data.additives_tags, product, 'additives', 'ingredients');
     this.importTags(data.allergens_hierarchy, product, 'allergens', 'traces');
@@ -130,6 +131,7 @@ export class ProductService {
     this.importTags(data.misc_tags, product, 'misc', 'misc');
 
     this.importIngredients(product, 0, data.ingredients);
+    */
     this.importNutrients(product, data.nutriments);
 
     return product;
@@ -188,7 +190,7 @@ export class ProductService {
       else if (suffix === 'label')
         nutrient.enteredName = value;
       else if (suffix === 'value')
-        if (prepared) nutrient.enteredQuantityPrepared = value;
+        if (prepared) nutrient.enteredQuantityPrepared = value; //TODO: Need to make sure values are valid numbers
         else nutrient.enteredQuantityAsSold = value;
       else if (suffix === '100g')
         if (prepared) nutrient.quantityPer100gPrepared = value;

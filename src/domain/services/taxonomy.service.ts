@@ -61,6 +61,7 @@ export class TaxonomyService {
     await this.productService.deleteAndFlush(TaxonomyStopword);
     await this.productService.deleteAndFlush(TaxonomySynonym);
     await this.productService.deleteAndFlush(TaxonomySynonymRoot);
+    await this.productService.deleteAndFlush(TaxonomyComment);
     await this.productService.deleteAndFlush(Taxonomy);
     await this.productService.deleteAndFlush(TaxonomyGroup);
     await this.productService.deleteAndFlush(Language);

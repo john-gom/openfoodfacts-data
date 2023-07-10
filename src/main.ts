@@ -6,7 +6,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.use(
     postgraphile(
-      "postgres://postgres:cactus789@127.0.0.1:5432/postgres",
+      "postgres://postgres:cactus789@127.0.0.1:5432/full",
       "off",
       {
         watchPg: true,

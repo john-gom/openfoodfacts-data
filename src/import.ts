@@ -10,8 +10,8 @@ async function bootstrap() {
   try {
     await RequestContext.createAsync(orm.em, async () => {
       //await app.get(TaxonomyService).importFromGit();
-      //await app.get(ProductService).importFromFile();
-      await app.get(ProductService).importFromMongo();
+      await app.get(ProductService).importFromFile(true);
+      //await app.get(ProductService).importFromMongo();
       //await app.get(ProductService).fixupProducts();
     });
   } finally {

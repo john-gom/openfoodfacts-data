@@ -16,6 +16,7 @@ export class TaxonomyStopword extends TaxonomyEntity {
   @ManyToOne()
   language!: Language;
 
+  // TODO: Aren't stopwords just synonyms with a synonym root of nothing?
   @Property()
   stopWord!: string;
 

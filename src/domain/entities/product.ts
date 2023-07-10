@@ -16,7 +16,7 @@ export class Product {
   name?: string;
 
   @Index({ type: 'fulltext' })
-  @Property<Product>({ type: FullTextType, onUpdate: (e) => e.name })
+  @Property<Product>({ type: FullTextType, onUpdate: (e) => e.name?.replace(/\?/g, '') }) // Question marks seem to confuse binding
   search?: string;
 
   @Property({ index: true })
