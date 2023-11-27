@@ -3,5 +3,6 @@
     "javascript.preferences.importModuleSpecifier": "relative",
     "typescript.preferences.importModuleSpecifier": "relative",
     "editor.formatOnSave": true,
-    "editor.tabSize": 2
+    "editor.tabSize": 2,
+    "workbench.colorTheme": "Tomorrow Night Blue"
 }

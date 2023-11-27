@@ -7,8 +7,9 @@ export default {
   metadataProvider: TsMorphMetadataProvider,
   //dbName: 'postgres',
   dbName: 'full',
-  user: 'postgres',
-  password: 'cactus789',
+  user: 'productopener',
+  password: 'productopener',
+  port: 5512,
   schema: 'off',
   type: 'postgresql',
   discovery: {
